@@ -13,8 +13,14 @@ class Template implements \pulledbits\View\Template {
         $this->cachePath = $cachePath;
     }
 
-    private function sub(string $templateIdentifier): \pulledbits\View\Template  {
+    private function sub(string $templateIdentifier): \pulledbits\View\Template
+    {
         return new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath, $this->cachePath);
+    }
+
+    private function layout(string $layoutIdentifier) : \pulledbits\View\Layout
+    {
+        return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 
     private function url(string $path): string
@@ -37,10 +43,5 @@ class Template implements \pulledbits\View\Template {
             file_put_contents($cacheFile, preg_replace('/<\?=\s?(.*?)[;\s]*\?>/', '<?=htmlentities($1);?>', $contents));
         }
         include $cacheFile;
-    }
-
-    private function layout(string $layoutIdentifier) : \pulledbits\View\Layout
-    {
-        return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 }
