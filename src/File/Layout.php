@@ -37,4 +37,13 @@ class Layout implements \pulledbits\View\Layout  {
     private function harvest(string $sectionIdentifier) {
         return $this->sections[$sectionIdentifier];
     }
+
+    public function __destruct()
+    {
+        if ($this->currentSectionIdentifier !== null) {
+            $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
+        } else {
+            ob_end_flush();
+        }
+    }
 }
