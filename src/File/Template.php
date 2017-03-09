@@ -7,10 +7,13 @@ class Template implements \pulledbits\View\Template {
     private $layoutsPath;
     private $cachePath;
 
+    private $helpers;
+
     public function __construct(string $templatePath, string $layoutsPath, string $cachePath) {
         $this->templatePath = $templatePath;
         $this->layoutsPath = $layoutsPath;
         $this->cachePath = $cachePath;
+        $this->helpers = [];
     }
 
     private function sub(string $templateIdentifier): \pulledbits\View\Template
@@ -23,15 +26,17 @@ class Template implements \pulledbits\View\Template {
         return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 
-    private function url(string $path): string
+    public function __call(string $identifier, array $arguments): string
     {
-        if (array_key_exists('HTTPS', $_SERVER) === false) {
-            $scheme = 'http';
-        } else {
-            $scheme = 'https';
+        if (array_key_exists($identifier, $this->helpers)) {
+            return call_user_func_array($this->helpers[$identifier], $arguments);
         }
+        return '';
+    }
 
-        return $scheme . '://' . $_SERVER['HTTP_HOST'] . $path;
+    public function registerHelper(string $identifier, callable $callback)
+    {
+        $this->helpers[$identifier] = $callback;
     }
 
     public function render(array $variables) {

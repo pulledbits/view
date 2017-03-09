@@ -94,30 +94,15 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
-    public function testRender_When_ExistingTemplateWithNoVariablesUsingURLNoHTTPS_Expect_ContentsWithURLOutputted()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
-        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-
-        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
-
-        $this->expectOutputString('<html>http://example.com/path/to/fileBlaBla</html>');
-        $object->render([]);
-
-        unlink($templatePath);
-    }
-
     public function testRender_When_ExistingTemplateWithNoVariablesUsingURLHTTPS_Expect_ContentsWithURLOutputted()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        $_SERVER['HTTPS'] = 'on';
-
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
         file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $object->registerHelper('url', function(string $path): string {
+            return 'https://example.com' . $path;
+        });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
         $object->render([]);
