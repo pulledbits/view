@@ -28,6 +28,24 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
+
+    public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
+    {
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($layoutPath . '.php', '<html>BlaBla</html>');
+
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<?php $layout = $this->layout(\'' . basename($layoutPath) . '\'); ?>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->expectOutputString('<html>BlaBla</html>');
+        $object->render([]);
+
+        unlink($templatePath);
+        unlink($layoutPath . '.php');
+    }
+
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
