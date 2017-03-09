@@ -16,12 +16,13 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
     public function testRender_When_ExistingTemplateWithNoVariables_Expect_ContentsOutputted()
     {
+        $variable = microtime();
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($templatePath, '<html>BlaBla</html>');
+        file_put_contents($templatePath, '<html>BlaBla</html>' . $variable);
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->expectOutputString('<html>BlaBla</html>');
+        $this->expectOutputString('<html>BlaBla</html>' . $variable);
         $object->render([]);
 
         unlink($templatePath);
