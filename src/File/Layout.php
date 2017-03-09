@@ -18,10 +18,11 @@ class Layout implements \pulledbits\View\Layout  {
     {
         if ($this->currentSectionIdentifier !== null) {
             $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
+        } else {
+            ob_end_flush();
         }
 
         include $this->layoutPath;
-        ob_end_flush();
     }
 
     public function section(string $sectionIdentifier, string $content = null) {
@@ -30,10 +31,10 @@ class Layout implements \pulledbits\View\Layout  {
             return;
         } elseif ($this->currentSectionIdentifier !== null) {
             $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
+            ob_start();
         }
 
         $this->currentSectionIdentifier = $sectionIdentifier;
-        ob_start();
     }
 
     private function harvest(string $sectionIdentifier) {
