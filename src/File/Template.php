@@ -18,7 +18,9 @@ class Template implements \pulledbits\View\Template {
 
     private function sub(string $templateIdentifier): \pulledbits\View\Template
     {
-        return new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath, $this->cachePath);
+        $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath, $this->cachePath);
+        $template->helpers = $this->helpers;
+        return $template;
     }
 
     private function layout(string $layoutIdentifier) : \pulledbits\View\Layout

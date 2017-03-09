@@ -94,7 +94,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
-    public function testRender_When_ExistingTemplateWithNoVariablesUsingURLHTTPS_Expect_ContentsWithURLOutputted()
+    public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
         file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
@@ -108,5 +108,25 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         $object->render([]);
 
         unlink($templatePath);
+    }
+
+
+    public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutputInSubTemplate()
+    {
+        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $object->registerHelper('url', function(string $path): string {
+            return 'https://example.com' . $path;
+        });
+
+        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
+        $object->render([]);
+
+        unlink($templatePath);
+        unlink($subtemplatePath . '.php');
     }
 }
