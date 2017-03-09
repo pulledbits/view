@@ -6,7 +6,6 @@ class Template implements \pulledbits\View\Template {
     private $templatePath;
     private $layoutsPath;
     private $cachePath;
-    private $layout;
 
     public function __construct(string $templatePath, string $layoutsPath, string $cachePath) {
         $this->templatePath = $templatePath;
@@ -38,15 +37,10 @@ class Template implements \pulledbits\View\Template {
             file_put_contents($cacheFile, preg_replace('/<\?=\s?(.*?)\s?\?>/', '<?=htmlentities($1);?>', $contents));
         }
         include $cacheFile;
-
-        if ($this->layout !== null) {
-            $this->layout->render();
-        }
     }
 
     private function layout(string $layoutIdentifier) : \pulledbits\View\Layout
     {
-        $this->layout = new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
-        return $this->layout;
+        return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 }

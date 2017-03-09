@@ -19,7 +19,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $object = new Layout($layoutPath);
 
         $this->expectOutputString('<html>BlaBla</html>');
-        $object->render();
+        unset($object);
     }
 
     public function testRender_When_SectionsAndExistingLayout_Expect_LayoutWithSectionContentsPrinted()
@@ -30,7 +30,7 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $object->section('foo', 'bar');
 
         $this->expectOutputString('<html>barBlaBla</html>');
-        $object->render();
+        unset($object);
     }
 
     public function testRender_When_SectionOBContentAndExistingLayout_Expect_LayoutWithSectionContentsPrinted()
@@ -42,6 +42,6 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         print 'bar';
 
         $this->expectOutputString('<html>barBlaBla</html>');
-        $object->render();
+        unset($object);
     }
 }

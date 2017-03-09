@@ -14,6 +14,16 @@ class Layout implements \pulledbits\View\Layout  {
         ob_start();
     }
 
+    public function __destruct()
+    {
+        if ($this->currentSectionIdentifier !== null) {
+            $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
+        }
+
+        include $this->layoutPath;
+        ob_end_flush();
+    }
+
     public function section(string $sectionIdentifier, string $content = null) {
         if ($content !== null) {
             $this->sections[$sectionIdentifier] = $content;
@@ -24,15 +34,6 @@ class Layout implements \pulledbits\View\Layout  {
 
         $this->currentSectionIdentifier = $sectionIdentifier;
         ob_start();
-    }
-
-    public function render() {
-        if ($this->currentSectionIdentifier !== null) {
-            $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
-        }
-
-        include $this->layoutPath;
-        ob_end_flush();
     }
 
     private function harvest(string $sectionIdentifier) {
