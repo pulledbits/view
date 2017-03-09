@@ -51,4 +51,23 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
         unlink($layoutPath);
     }
+
+
+    public function testRender_When_MultipleSectionsOBContentAndExistingLayout_Expect_LayoutWithSectionContentsPrinted()
+    {
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($layoutPath, '<html><?=$this->harvest(\'title\');?><?=$this->harvest(\'content\');?>BlaBla<?=$this->harvest(\'footer\');?></html>');
+        $object = new Layout($layoutPath);
+        $object->section('title', 'blabla');
+        $object->section('content');
+        print 'bar';
+        $object->section('footer');
+        print '<footer>Blabla</footer>';
+
+        $this->expectOutputString('<html>blablabarBlaBla<footer>Blabla</footer></html>');
+        unset($object);
+
+
+        unlink($layoutPath);
+    }
 }
