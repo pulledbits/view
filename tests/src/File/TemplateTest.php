@@ -27,8 +27,6 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
-
-
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
@@ -39,6 +37,22 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('<html>barBlaBla</html>');
         $object->render([
             'foo' => 'bar'
+        ]);
+
+        unlink($templatePath);
+    }
+
+
+    public function testRender_When_ExistingTemplateWithHTMLUnsafeVariables_Expect_ContentsOutputted()
+    {
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html><?=$foo?>BlaBla</html>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->expectOutputString('<html>&lt;bar&gt;BlaBla</html>');
+        $object->render([
+            'foo' => '<bar>'
         ]);
 
         unlink($templatePath);
