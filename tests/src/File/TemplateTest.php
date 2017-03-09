@@ -46,7 +46,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testRender_When_ExistingTemplateWithHTMLUnsafeVariables_Expect_ContentsOutputted()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($templatePath, '<html><?=$foo?>BlaBla</html>');
+        file_put_contents($templatePath, '<html><?=$foo;?>BlaBla</html>');
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
