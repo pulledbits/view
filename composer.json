@@ -1,0 +1,21 @@
+{
+	"name" : "pulledbits/view",
+	"description" : "native PHP view engine",
+	"license" : "MIT",
+	"minimum-stability" : "dev",
+	"prefer-stable" : true,
+	"require" : {
+		"php" : ">=7.0"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "~5"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"pulledbits\\View\\" : "src"
+		}
+	},
+	"config" : {
+		"discard-changes" : true
+	}
+}
