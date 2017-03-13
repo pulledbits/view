@@ -42,7 +42,7 @@ class Template implements \pulledbits\View\Template {
 
     public function registerHelper(string $identifier, callable $callback)
     {
-        $this->helpers[$identifier] = \Closure::bind($callback, $this);
+        $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
     public function render(array $parameters) {
