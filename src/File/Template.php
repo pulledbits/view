@@ -41,7 +41,15 @@ class Template implements \pulledbits\View\Template {
         $this->helpers[$identifier] = $callback;
     }
 
-    public function render(array $variables) {
+    public function render(array $parameters) {
+        $variables = [];
+        foreach ($parameters as $parameterIdentifier => $parameter) {
+            if (is_callable($parameter)) {
+                $this->registerHelper($parameterIdentifier, $parameter);
+            } else {
+                $variables[$parameterIdentifier] = $parameter;
+            }
+        }
         extract($variables);
 
         $cacheFile = $this->cachePath . DIRECTORY_SEPARATOR . sha1_file($this->templatePath) . '.php';
