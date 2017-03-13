@@ -85,4 +85,19 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         unlink($layoutPath);
         unlink($parentLayoutPath);
     }
+
+    public function testRender_When_LayoutExtendsOtherLayoutUsingHarvest_Expect_LayoutContentsPrinted()
+    {
+        $parentLayoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($parentLayoutPath . '.php', '<html><title><?=$this->harvest(\'title\');?></title>BlaBla</html>');
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($layoutPath, '<?php $layout = $this->layout(\'' . basename($parentLayoutPath) . '\'); $layout->section(\'title\', \'Hello World!\'); ?>');
+        $object = new Layout($layoutPath);
+
+        $this->expectOutputString('<html><title>Hello World!</title>BlaBla</html>');
+        unset($object);
+
+        unlink($layoutPath);
+        unlink($parentLayoutPath);
+    }
 }
