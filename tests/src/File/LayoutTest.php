@@ -70,4 +70,19 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
 
         unlink($layoutPath);
     }
+
+    public function testRender_When_LayoutExtendsOtherLayout_Expect_LayoutContentsPrinted()
+    {
+        $parentLayoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($parentLayoutPath . '.php', '<html>BlaBla</html>');
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($layoutPath, '<?php $layout = $this->layout(\'' . basename($parentLayoutPath) . '\'); ?>');
+        $object = new Layout($layoutPath);
+
+        $this->expectOutputString('<html>BlaBla</html>');
+        unset($object);
+
+        unlink($layoutPath);
+        unlink($parentLayoutPath);
+    }
 }

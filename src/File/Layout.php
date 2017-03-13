@@ -40,4 +40,9 @@ class Layout implements \pulledbits\View\Layout  {
     private function harvest(string $sectionIdentifier) {
         return $this->sections[$sectionIdentifier];
     }
+
+    private function layout(string $layoutIdentifier) : Layout
+    {
+        return new self(dirname($this->layoutPath) . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
+    }
 }
