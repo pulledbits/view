@@ -38,7 +38,7 @@ class Template implements \pulledbits\View\Template {
 
     public function registerHelper(string $identifier, callable $callback)
     {
-        $this->helpers[$identifier] = $callback;
+        $this->helpers[$identifier] = \Closure::bind($callback, $this);
     }
 
     public function render(array $parameters) {

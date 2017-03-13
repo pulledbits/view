@@ -130,6 +130,28 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($subtemplatePath . '.php');
     }
 
+    public function testRender_When_HelperUsingOtherHelper_Expect_ContentsWithHelperHelper()
+    {
+        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $object->registerHelper('url', function(string $path): string {
+            return 'https://' . $this->host() . $path;
+        });
+
+        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
+        $object->render([
+            'host' => function(): string {
+                return 'example.com';
+            }
+        ]);
+
+        unlink($templatePath);
+        unlink($subtemplatePath . '.php');
+    }
 
     public function testRender_When_HelperRegisteredThroughRenderArgument_Expect_ContentsWithHelperOutputInSubTemplate()
     {
