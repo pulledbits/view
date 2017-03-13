@@ -27,7 +27,7 @@ class Layout implements \pulledbits\View\Layout  {
 
     public function section(string $sectionIdentifier, string $content = null) {
         if ($content !== null) {
-            $this->sections[$sectionIdentifier] = $content;
+            $this->sections[$sectionIdentifier] = htmlentities($content);
             return;
         } elseif ($this->currentSectionIdentifier !== null) {
             $this->sections[$this->currentSectionIdentifier] = ob_get_clean();

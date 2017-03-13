@@ -91,10 +91,10 @@ class LayoutTest extends \PHPUnit_Framework_TestCase
         $parentLayoutPath = tempnam(sys_get_temp_dir(), 'lt_');
         file_put_contents($parentLayoutPath . '.php', '<html><title><?=$this->harvest(\'title\');?></title>BlaBla</html>');
         $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
-        file_put_contents($layoutPath, '<?php $layout = $this->layout(\'' . basename($parentLayoutPath) . '\'); $layout->section(\'title\', \'Hello World!\'); ?>');
+        file_put_contents($layoutPath, '<?php $layout = $this->layout(\'' . basename($parentLayoutPath) . '\'); $layout->section(\'title\', \'Hëllo World!\'); ?>');
         $object = new Layout($layoutPath);
 
-        $this->expectOutputString('<html><title>Hello World!</title>BlaBla</html>');
+        $this->expectOutputString('<html><title>H&euml;llo World!</title>BlaBla</html>');
         unset($object);
 
         unlink($layoutPath);
