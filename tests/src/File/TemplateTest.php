@@ -28,6 +28,19 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
+    public function testCapture_When_ExistingTemplateWithNoVariables_Expect_ContentsOutputted()
+    {
+        $variable = microtime();
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html>BlaBla</html>' . $variable);
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->assertEquals('<html>BlaBla</html>' . $variable, $object->capture([]));
+
+        unlink($templatePath);
+    }
+
 
     public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
     {

@@ -16,6 +16,13 @@ class Template implements \pulledbits\View\Template {
         $this->helpers = [];
     }
 
+    public function capture(array $parameters)
+    {
+        ob_start();
+        $this->render($parameters);
+        return ob_get_clean();
+    }
+
     private function sub(string $templateIdentifier): \pulledbits\View\Template
     {
         $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath, $this->cachePath);
