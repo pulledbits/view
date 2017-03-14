@@ -49,6 +49,10 @@ class Template implements \pulledbits\View\Template {
 
             case 'void':
                 return $this->captureHelper($this->helpers[$identifier], $arguments);
+
+            default:
+                $this->captureHelper($this->helpers[$identifier], $arguments);
+                return '';
         }
     }
 
