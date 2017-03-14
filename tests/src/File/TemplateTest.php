@@ -110,6 +110,21 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
+    public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_ContentsWithHelperOutput()
+    {
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $object->registerHelper('url', function(string $path) : void {
+            print 'https://example.com' . $path;
+        });
+
+        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
+        $object->render([]);
+
+        unlink($templatePath);
+    }
 
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutputInSubTemplate()
     {
