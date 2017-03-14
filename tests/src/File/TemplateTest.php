@@ -110,13 +110,29 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
-    public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_ContentsWithHelperOutput()
+    public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_OBContentsWithHelperOutput()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
         file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
         $object->registerHelper('url', function(string $path) : void {
+            print 'https://example.com' . $path;
+        });
+
+        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
+        $object->render([]);
+
+        unlink($templatePath);
+    }
+
+    public function testRender_When_HelperRegisteredNoReturnType_Expect_OBContentsWithHelperOutput()
+    {
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $object->registerHelper('url', function(string $path) {
             print 'https://example.com' . $path;
         });
 
