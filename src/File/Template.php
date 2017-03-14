@@ -86,6 +86,13 @@ class Template implements \pulledbits\View\Template
 
     public function render(array $parameters): void
     {
+        $cacheFile = $this->cachePath . DIRECTORY_SEPARATOR . sha1_file($this->templatePath) . '.php';
+        if (file_exists($cacheFile) === false) {
+            $contents = file_get_contents($this->templatePath);
+            file_put_contents($cacheFile,
+                preg_replace('/<\?=\s?(.*?)[;\s]*\?>/', '<?=$this->escape($1);?>', $contents));
+        }
+
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
             if (is_callable($parameter)) {
@@ -95,13 +102,6 @@ class Template implements \pulledbits\View\Template
             }
         }
         extract($variables);
-
-        $cacheFile = $this->cachePath . DIRECTORY_SEPARATOR . sha1_file($this->templatePath) . '.php';
-        if (file_exists($cacheFile) === false) {
-            $contents = file_get_contents($this->templatePath);
-            file_put_contents($cacheFile,
-                preg_replace('/<\?=\s?(.*?)[;\s]*\?>/', '<?=$this->escape($1);?>', $contents));
-        }
         include $cacheFile;
     }
 }
