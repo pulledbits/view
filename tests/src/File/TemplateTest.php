@@ -94,6 +94,13 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
+    public function test__call_When_NonExistingHelper_Expect_EmptyString()
+    {
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $this->assertEquals('', $object->nonExistingHelper());
+    }
+
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
