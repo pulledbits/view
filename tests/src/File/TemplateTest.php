@@ -36,7 +36,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('<html>BlaBla</html>' . $variable, $object->capture([]));
+        $this->assertEquals('<html>BlaBla</html>' . $variable, stream_get_contents($object->capture([])));
 
         unlink($templatePath);
     }

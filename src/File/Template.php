@@ -18,11 +18,16 @@ class Template implements \pulledbits\View\Template
         $this->helpers = [];
     }
 
-    public function capture(array $parameters): string
+    public function capture(array $parameters)
     {
-        ob_start();
+        $stream = fopen('php://memory', 'wb');
+        ob_start(function(string $buffer) use ($stream) {
+            fwrite($stream, $buffer);
+        });
         $this->render($parameters);
-        return ob_get_clean();
+        ob_end_clean();
+        fseek($stream, 0);
+        return $stream;
     }
 
     private function sub(string $templateIdentifier): \pulledbits\View\Template
