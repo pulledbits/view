@@ -16,7 +16,7 @@ class Template implements \pulledbits\View\Template {
         $this->helpers = [];
     }
 
-    public function capture(array $parameters)
+    public function capture(array $parameters) : string
     {
         ob_start();
         $this->render($parameters);
@@ -69,12 +69,12 @@ class Template implements \pulledbits\View\Template {
         return ob_get_clean();
     }
 
-    public function registerHelper(string $identifier, callable $callback)
+    public function registerHelper(string $identifier, callable $callback) : void
     {
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function render(array $parameters) {
+    public function render(array $parameters) : void {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
             if (is_callable($parameter)) {
