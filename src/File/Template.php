@@ -2,14 +2,36 @@
 namespace pulledbits\View\File;
 
 
+/**
+ * Class Template
+ * @package pulledbits\View\File
+ */
 class Template implements \pulledbits\View\Template
 {
+    /**
+     * @var string
+     */
     private $templatePath;
+    /**
+     * @var string
+     */
     private $layoutsPath;
+    /**
+     * @var string
+     */
     private $cachePath;
 
+    /**
+     * @var array
+     */
     private $helpers;
 
+    /**
+     * Template constructor.
+     * @param string $templatePath
+     * @param string $layoutsPath
+     * @param string $cachePath
+     */
     public function __construct(string $templatePath, string $layoutsPath, string $cachePath)
     {
         $this->templatePath = $templatePath;
@@ -18,6 +40,10 @@ class Template implements \pulledbits\View\Template
         $this->helpers = [];
     }
 
+    /**
+     * @param array $parameters
+     * @return resource
+     */
     public function capture(array $parameters)
     {
         $stream = fopen('php://memory', 'wb');
@@ -30,6 +56,10 @@ class Template implements \pulledbits\View\Template
         return $stream;
     }
 
+    /**
+     * @param string $templateIdentifier
+     * @return \pulledbits\View\Template
+     */
     private function sub(string $templateIdentifier): \pulledbits\View\Template
     {
         $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php',
@@ -38,16 +68,29 @@ class Template implements \pulledbits\View\Template
         return $template;
     }
 
+    /**
+     * @param string $layoutIdentifier
+     * @return \pulledbits\View\Layout
+     */
     private function layout(string $layoutIdentifier): \pulledbits\View\Layout
     {
         return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 
+    /**
+     * @param string $unsafestring
+     * @return string
+     */
     private function escape(string $unsafestring)
     {
         return htmlentities($unsafestring);
     }
 
+    /**
+     * @param string $identifier
+     * @param array $arguments
+     * @return string
+     */
     public function __call(string $identifier, array $arguments): string
     {
         if (array_key_exists($identifier, $this->helpers) === false) {
@@ -76,11 +119,18 @@ class Template implements \pulledbits\View\Template
         }
     }
 
+    /**
+     * @param string $identifier
+     * @param callable $callback
+     */
     public function registerHelper(string $identifier, callable $callback) : void
     {
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
+    /**
+     * @param array $parameters
+     */
     public function render(array $parameters): void
     {
         $cacheFile = $this->cachePath . DIRECTORY_SEPARATOR . sha1_file($this->templatePath) . '.php';
