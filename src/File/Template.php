@@ -46,14 +46,9 @@ class Template implements \pulledbits\View\Template
      */
     public function capture(array $parameters)
     {
-        $stream = fopen('php://memory', 'wb');
-        ob_start(function(string $buffer) use ($stream) {
-            fwrite($stream, $buffer);
-        });
+        ob_start();
         $this->render($parameters);
-        ob_end_clean();
-        fseek($stream, 0);
-        return $stream;
+        return ob_get_clean();;
     }
 
     /**

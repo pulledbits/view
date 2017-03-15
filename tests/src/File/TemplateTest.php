@@ -37,8 +37,8 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('<html>barBlaBla</html>' . $variable, stream_get_contents($object->capture(['foo' => 'bar'])));
-        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, stream_get_contents($object->capture(['foo' => 'bar2'])));
+        $this->assertEquals('<html>barBlaBla</html>' . $variable, $object->capture(['foo' => 'bar']));
+        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, $object->capture(['foo' => 'bar2']));
 
         unlink($templatePath);
     }
@@ -52,7 +52,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('<html>BlaBla</html>' . $variable, stream_get_contents($object->capture([])));
+        $this->assertEquals('<html>BlaBla</html>' . $variable, $object->capture([]));
 
         unlink($templatePath);
     }
@@ -64,10 +64,10 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('<html>Bla</html>', stream_get_contents($object->capture([
+        $this->assertEquals('<html>Bla</html>', $object->capture([
             'foo' => function() : void { print 'Bla'; },
             'bar' => function() : void { $this->foo(); }
-        ])));
+        ]));
 
         unlink($templatePath);
     }
