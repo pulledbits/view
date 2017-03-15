@@ -56,7 +56,8 @@ class Template implements \pulledbits\View\Template
 
         $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
         if ($helperReflection->hasReturnType() === false) {
-            return $this->captureHelper($this->helpers[$identifier], $arguments);
+            call_user_func_array($this->helpers[$identifier], $arguments);
+            return '';
         }
 
         switch ($helperReflection->getReturnType()) {
@@ -64,22 +65,18 @@ class Template implements \pulledbits\View\Template
                 return call_user_func_array($this->helpers[$identifier], $arguments);
 
             case 'void':
-                return $this->captureHelper($this->helpers[$identifier], $arguments);
+                call_user_func_array($this->helpers[$identifier], $arguments);
+                return '';
 
             default:
-                $this->captureHelper($this->helpers[$identifier], $arguments);
+                ob_start();
+                call_user_func_array($this->helpers[$identifier], $arguments);
+                ob_end_clean();
                 return '';
         }
     }
 
-    private function captureHelper(callable $helper, array $arguments): string
-    {
-        ob_start();
-        call_user_func_array($helper, $arguments);
-        return ob_get_clean();
-    }
-
-    public function registerHelper(string $identifier, callable $callback): void
+    public function registerHelper(string $identifier, callable $callback) : void
     {
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }

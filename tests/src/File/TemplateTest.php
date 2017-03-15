@@ -29,7 +29,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testRender_When_SameTemplateDifferentVariables_Expect_DifferentOutput()
+    public function testCapture_When_SameTemplateDifferentVariables_Expect_DifferentOutput()
     {
         $variable = microtime();
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
@@ -56,6 +56,22 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         unlink($templatePath);
     }
+
+    public function testCapture_When_NestedVoidHelpers_Expect_ContentsOutputted()
+    {
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html><?php $this->bar();?></html>');
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->assertEquals('<html>Bla</html>', stream_get_contents($object->capture([
+            'foo' => function() : void { print 'Bla'; },
+            'bar' => function() : void { $this->foo(); }
+        ])));
+
+        unlink($templatePath);
+    }
+
 
 
     public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
