@@ -28,6 +28,19 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         unlink($templatePath);
     }
 
+    public function testResponse_When_DefaultState_Expect_PSRCompatibleServerResponse()
+    {
+        $variable = microtime();
+        $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        file_put_contents($templatePath, '<html><?=$foo?>BlaBla</html>' . $variable);
+
+        $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->assertEquals('<html>barBlaBla</html>' . $variable, $object->response(200, ['foo' => 'bar'])->getBody());
+
+        unlink($templatePath);
+    }
+
 
     public function testCapture_When_SameTemplateDifferentVariables_Expect_DifferentOutput()
     {
