@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="pulledbits\View\File\Layout" namespace="pulledbits\View\File" name="Layout" abstract="false" final="false" start="5" end="48">
+  <file path="src/File" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/File/Layout.php" size="1357" time="2017-03-13T13:16:55+00:00" unixtime="1489411015" sha1="861b9e4e1090249130e2d70e57da06ad7b6cff6b" relative="File/Layout.php"/>
+  <implements full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout"/>
+  <member name="layoutPath" visibility="private" static="false" line="6"/>
+  <member name="sections" visibility="private" static="false" line="7"/>
+  <member name="currentSectionIdentifier" visibility="private" static="false" line="8"/>
+  <constructor name="__construct" start="10" end="15" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="layoutPath" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </constructor>
+  <destructor name="__destruct" start="17" end="26" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="section" start="28" end="38" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="sectionIdentifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+    <parameter name="content" byreference="false" type="{unknown}" default="" constant="null">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <method name="harvest" start="40" end="42" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="sectionIdentifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <method name="layout" start="44" end="47" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="layoutIdentifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <interface full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout">
+    <method name="section" start="8" end="8" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="sectionIdentifier" byreference="false" type="object">
+        <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
+      </parameter>
+      <parameter name="content" byreference="false" type="{unknown}" default="" constant="null">
+        <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
+      </parameter>
+    </method>
+  </interface>
+</class>

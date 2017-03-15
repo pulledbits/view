@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src" full="pulledbits\View\Template" namespace="pulledbits\View" name="Template" abstract="false" final="false" start="6" end="15">
+  <file path="src" file="Template.php" realpath="/home/hameijer/git/rikmeijer/view/src/Template.php" size="312" time="2017-03-14T12:41:34+00:00" unixtime="1489495294" sha1="842a302007628215a37716df0e74eacb43025dce" relative="Template.php"/>
+  <method name="capture" start="12" end="12" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$variables"/>
+      <return type="resource"/>
+    </docblock>
+    <parameter name="variables" byreference="false" type="array"/>
+  </method>
+  <method name="render" start="13" end="13" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="variables" byreference="false" type="array"/>
+  </method>
+  <method name="registerHelper" start="14" end="14" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="identifier" byreference="false" type="object">
+      <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
+    </parameter>
+    <parameter name="callback" byreference="false" type="object">
+      <type full="pulledbits\View\callable" namespace="pulledbits\View" name="callable"/>
+    </parameter>
+  </method>
+  <implementors>
+    <class full="pulledbits\View\File\Template" namespace="pulledbits\View\File" name="Template"/>
+  </implementors>
+</interface>

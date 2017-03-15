@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="pulledbits\View\File\Template" namespace="pulledbits\View\File" name="Template" abstract="false" final="false" start="5" end="104">
+  <file path="src/File" file="Template.php" realpath="/home/hameijer/git/rikmeijer/view/src/File/Template.php" size="3331" time="2017-03-15T09:13:26+00:00" unixtime="1489569206" sha1="58c17138a56a68d8eddae91b8e07c4267db5804f" relative="File/Template.php"/>
+  <implements full="pulledbits\View\Template" namespace="pulledbits\View" name="Template"/>
+  <member name="templatePath" visibility="private" static="false" line="7"/>
+  <member name="layoutsPath" visibility="private" static="false" line="8"/>
+  <member name="cachePath" visibility="private" static="false" line="9"/>
+  <member name="helpers" visibility="private" static="false" line="11"/>
+  <constructor name="__construct" start="13" end="19" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="templatePath" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+    <parameter name="layoutsPath" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+    <parameter name="cachePath" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </constructor>
+  <method name="capture" start="21" end="31" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <method name="sub" start="33" end="39" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="templateIdentifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <method name="layout" start="41" end="44" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="layoutIdentifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <method name="escape" start="46" end="49" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="unsafestring" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+  </method>
+  <method name="__call" start="51" end="77" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="identifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+  <method name="registerHelper" start="79" end="82" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="identifier" byreference="false" type="object">
+      <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
+    </parameter>
+    <parameter name="callback" byreference="false" type="object">
+      <type full="pulledbits\View\File\callable" namespace="pulledbits\View\File" name="callable"/>
+    </parameter>
+  </method>
+  <method name="render" start="84" end="103" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <interface full="pulledbits\View\Template" namespace="pulledbits\View" name="Template">
+    <method name="capture" start="12" end="12" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param type="array" variable="$variables"/>
+        <return type="resource"/>
+      </docblock>
+      <parameter name="variables" byreference="false" type="array"/>
+    </method>
+    <method name="render" start="13" end="13" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="variables" byreference="false" type="array"/>
+    </method>
+    <method name="registerHelper" start="14" end="14" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="identifier" byreference="false" type="object">
+        <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
+      </parameter>
+      <parameter name="callback" byreference="false" type="object">
+        <type full="pulledbits\View\callable" namespace="pulledbits\View" name="callable"/>
+      </parameter>
+    </method>
+  </interface>
+</class>
