@@ -127,7 +127,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testRender_When_ExistingTemplateWithHTMLUnsafeVariables_Expect_ContentsOutputted()
     {
         $templatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($templatePath, '<html><?=$foo;?>BlaBla</html>');
+        file_put_contents($templatePath, '<html><?=$this->escape($foo);?>BlaBla</html>');
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
 
@@ -153,10 +153,10 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
         $object->registerHelper('url', function(string $path): string {
-            return 'https://example.com' . $path;
+            return 'https://example.com/<>' . $path;
         });
 
-        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
+        $this->expectOutputString('<html>https://example.com/&lt;&gt;/path/to/fileBlaBla</html>');
         $object->render([]);
 
         unlink($templatePath);
@@ -263,7 +263,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
         $object = new Template($templatePath, sys_get_temp_dir(), sys_get_temp_dir());
         $object->registerHelper('url', function(string $path): string {
-            return $this->escape('https://' . $this->host() . $path);
+            return 'https://' . $this->host() . $path;
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
