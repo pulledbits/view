@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface xmlns="http://xml.phpdox.net/src" full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout" abstract="false" final="false" start="6" end="9">
-  <file path="src" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/Layout.php" size="136" time="2017-03-09T19:54:04+00:00" unixtime="1489089244" sha1="25f4f07cf752bb7e5605e21ba7fcda0c88f6286a" relative="Layout.php"/>
-  <method name="section" start="8" end="8" abstract="false" final="false" static="false" visibility="public">
+<interface xmlns="http://xml.phpdox.net/src" full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout" abstract="false" final="false" start="10" end="18">
+  <file path="src" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/Layout.php" size="304" time="2017-03-15T09:26:20+00:00" unixtime="1489569980" sha1="29bbfae272987abad414de5d41a1c281401dbc4b" relative="Layout.php"/>
+  <docblock>
+    <description compact="Interface Layout"/>
+    <package value="pulledbits\View"/>
+  </docblock>
+  <method name="section" start="17" end="17" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="string" variable="$sectionIdentifier"/>
+      <param type="object" variable="$content">
+        <type full="pulledbits\View\string|null" namespace="pulledbits\View" name="string|null"/>
+      </param>
+      <return type="mixed"/>
+    </docblock>
     <parameter name="sectionIdentifier" byreference="false" type="object">
       <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
     </parameter>

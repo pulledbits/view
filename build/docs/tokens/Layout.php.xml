@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <source xmlns="http://xml.phpdox.net/token">
-  <file xmlns="http://xml.phpdox.net/src" path="src" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/Layout.php" size="136" time="2017-03-09T19:54:04+00:00" unixtime="1489089244" sha1="25f4f07cf752bb7e5605e21ba7fcda0c88f6286a" relative="Layout.php"/>
+  <file xmlns="http://xml.phpdox.net/src" path="src" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/Layout.php" size="304" time="2017-03-15T09:26:20+00:00" unixtime="1489569980" sha1="29bbfae272987abad414de5d41a1c281401dbc4b" relative="Layout.php"/>
   <line no="1">
     <token name="T_OPEN_TAG">&lt;?php</token>
   </line>
@@ -16,14 +16,42 @@
   <line no="4"/>
   <line no="5"/>
   <line no="6">
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="7">
+    <token name="T_DOC_COMMENT"> * Interface Layout</token>
+  </line>
+  <line no="8">
+    <token name="T_DOC_COMMENT"> * @package pulledbits\View</token>
+  </line>
+  <line no="9">
+    <token name="T_DOC_COMMENT"> */</token>
+  </line>
+  <line no="10">
     <token name="T_INTERFACE">interface</token>
     <token name="T_WHITESPACE"> </token>
     <token name="T_STRING">Layout</token>
   </line>
-  <line no="7">
+  <line no="11">
     <token name="T_PHPDOX_OPEN_CURLY">{</token>
   </line>
-  <line no="8">
+  <line no="12">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="13">
+    <token name="T_DOC_COMMENT">     * @param string $sectionIdentifier</token>
+  </line>
+  <line no="14">
+    <token name="T_DOC_COMMENT">     * @param string|null $content</token>
+  </line>
+  <line no="15">
+    <token name="T_DOC_COMMENT">     * @return mixed</token>
+  </line>
+  <line no="16">
+    <token name="T_DOC_COMMENT">     */</token>
+  </line>
+  <line no="17">
     <token name="T_WHITESPACE">    </token>
     <token name="T_PUBLIC">public</token>
     <token name="T_WHITESPACE"> </token>
@@ -46,7 +74,7 @@
     <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
     <token name="T_PHPDOX_SEMICOLON">;</token>
   </line>
-  <line no="9">
+  <line no="18">
     <token name="T_PHPDOX_CLOSE_CURLY">}</token>
   </line>
 </source>

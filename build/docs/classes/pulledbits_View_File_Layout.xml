@@ -1,17 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src" full="pulledbits\View\File\Layout" namespace="pulledbits\View\File" name="Layout" abstract="false" final="false" start="5" end="48">
-  <file path="src/File" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/File/Layout.php" size="1357" time="2017-03-13T13:16:55+00:00" unixtime="1489411015" sha1="861b9e4e1090249130e2d70e57da06ad7b6cff6b" relative="File/Layout.php"/>
+<class xmlns="http://xml.phpdox.net/src" full="pulledbits\View\File\Layout" namespace="pulledbits\View\File" name="Layout" abstract="false" final="false" start="9" end="80">
+  <file path="src/File" file="Layout.php" realpath="/home/hameijer/git/rikmeijer/view/src/File/Layout.php" size="1855" time="2017-03-15T09:26:07+00:00" unixtime="1489569967" sha1="f2fb1bf708810c6d5d5f2e2187c9656c80e4f53f" relative="File/Layout.php"/>
+  <docblock>
+    <description compact="Class Layout"/>
+    <package value="pulledbits\View\File"/>
+  </docblock>
   <implements full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout"/>
-  <member name="layoutPath" visibility="private" static="false" line="6"/>
-  <member name="sections" visibility="private" static="false" line="7"/>
-  <member name="currentSectionIdentifier" visibility="private" static="false" line="8"/>
-  <constructor name="__construct" start="10" end="15" abstract="false" final="false" static="false" visibility="public">
+  <member name="layoutPath" visibility="private" static="false" line="13">
+    <docblock>
+      <description/>
+      <var type="string"/>
+    </docblock>
+  </member>
+  <member name="sections" visibility="private" static="false" line="17">
+    <docblock>
+      <description/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="currentSectionIdentifier" visibility="private" static="false" line="21">
+    <docblock>
+      <description/>
+      <var/>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="27" end="32" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Layout constructor."/>
+      <param type="string" variable="$layoutPath"/>
+    </docblock>
     <parameter name="layoutPath" byreference="false" type="object">
       <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
     </parameter>
   </constructor>
-  <destructor name="__destruct" start="17" end="26" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="section" start="28" end="38" abstract="false" final="false" static="false" visibility="public">
+  <destructor name="__destruct" start="37" end="46" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+    </docblock>
+  </destructor>
+  <method name="section" start="52" end="62" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="string" variable="$sectionIdentifier"/>
+      <param type="object" variable="$content">
+        <type full="pulledbits\View\File\string|null" namespace="pulledbits\View\File" name="string|null"/>
+      </param>
+    </docblock>
     <parameter name="sectionIdentifier" byreference="false" type="object">
       <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
     </parameter>
@@ -19,18 +53,38 @@
       <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
     </parameter>
   </method>
-  <method name="harvest" start="40" end="42" abstract="false" final="false" static="false" visibility="private">
+  <method name="harvest" start="68" end="70" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description/>
+      <param type="string" variable="$sectionIdentifier"/>
+      <return type="mixed"/>
+    </docblock>
     <parameter name="sectionIdentifier" byreference="false" type="object">
       <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
     </parameter>
   </method>
-  <method name="layout" start="44" end="47" abstract="false" final="false" static="false" visibility="private">
+  <method name="layout" start="76" end="79" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description/>
+      <param type="string" variable="$layoutIdentifier"/>
+      <return type="object">
+        <type full="pulledbits\View\File\Layout" namespace="pulledbits\View\File" name="Layout"/>
+      </return>
+    </docblock>
     <parameter name="layoutIdentifier" byreference="false" type="object">
       <type full="pulledbits\View\File\string" namespace="pulledbits\View\File" name="string"/>
     </parameter>
   </method>
   <interface full="pulledbits\View\Layout" namespace="pulledbits\View" name="Layout">
-    <method name="section" start="8" end="8" abstract="false" final="false" static="false" visibility="public">
+    <method name="section" start="17" end="17" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param type="string" variable="$sectionIdentifier"/>
+        <param type="object" variable="$content">
+          <type full="pulledbits\View\string|null" namespace="pulledbits\View" name="string|null"/>
+        </param>
+        <return type="mixed"/>
+      </docblock>
       <parameter name="sectionIdentifier" byreference="false" type="object">
         <type full="pulledbits\View\string" namespace="pulledbits\View" name="string"/>
       </parameter>

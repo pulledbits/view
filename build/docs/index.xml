@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <index xmlns="http://xml.phpdox.net/src" basedir="/home/hameijer/git/rikmeijer/view/src">
   <namespace name="pulledbits\View">
-    <interface name="Layout" src="Layout.php" xml="interfaces/pulledbits_View_Layout.xml"/>
-    <interface name="Template" src="Template.php" xml="interfaces/pulledbits_View_Template.xml"/>
-  </namespace>
+    
+    
+  <interface name="Layout" src="Layout.php" description="Interface Layout" xml="interfaces/pulledbits_View_Layout.xml"/><interface name="Template" src="Template.php" description="Interface Template" xml="interfaces/pulledbits_View_Template.xml"/></namespace>
   <namespace name="pulledbits\View\File">
-    <class name="Layout" src="File/Layout.php" xml="classes/pulledbits_View_File_Layout.xml"/>
-    <class name="Template" src="File/Template.php" xml="classes/pulledbits_View_File_Template.xml"/>
-  </namespace>
+    
+    
+  <class name="Layout" src="File/Layout.php" description="Class Layout" xml="classes/pulledbits_View_File_Layout.xml"/><class name="Template" src="File/Template.php" description="Class Template" xml="classes/pulledbits_View_File_Template.xml"/></namespace>
 </index>
