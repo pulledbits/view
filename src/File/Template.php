@@ -12,14 +12,11 @@ class Template implements \pulledbits\View\Template
      * @var string
      */
     private $templatePath;
+
     /**
      * @var string
      */
     private $layoutsPath;
-    /**
-     * @var string
-     */
-    private $cachePath;
 
     /**
      * @var array
@@ -30,13 +27,11 @@ class Template implements \pulledbits\View\Template
      * Template constructor.
      * @param string $templatePath
      * @param string $layoutsPath
-     * @param string $cachePath
      */
-    public function __construct(string $templatePath, string $layoutsPath, string $cachePath)
+    public function __construct(string $templatePath, string $layoutsPath)
     {
         $this->templatePath = $templatePath;
         $this->layoutsPath = $layoutsPath;
-        $this->cachePath = $cachePath;
         $this->helpers = [];
     }
 
@@ -48,7 +43,7 @@ class Template implements \pulledbits\View\Template
     {
         ob_start();
         $this->render($parameters);
-        return ob_get_clean();;
+        return ob_get_clean();
     }
 
     /**
@@ -57,8 +52,7 @@ class Template implements \pulledbits\View\Template
      */
     private function sub(string $templateIdentifier): \pulledbits\View\Template
     {
-        $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php',
-            $this->layoutsPath, $this->cachePath);
+        $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath);
         $template->helpers = $this->helpers;
         return $template;
     }
