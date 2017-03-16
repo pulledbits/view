@@ -35,10 +35,6 @@ class Template implements \pulledbits\View\Template
         $this->helpers = [];
     }
 
-    public function response(int $code, array $parameters) : \Psr\Http\Message\ResponseInterface {
-        return (new \GuzzleHttp\Psr7\Response($code))->withBody(\GuzzleHttp\Psr7\stream_for($this->capture($parameters)));
-    }
-
     /**
      * @param array $parameters
      * @return resource
