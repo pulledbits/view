@@ -11,7 +11,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @var string
      */
-    private $templatePath;
+    private $templatesPath;
 
     /**
      * @var string
@@ -25,12 +25,12 @@ class Template implements \pulledbits\View\Template
 
     /**
      * Template constructor.
-     * @param string $templatePath
+     * @param string $templatesPath
      * @param string $layoutsPath
      */
-    public function __construct(string $templatePath, string $layoutsPath)
+    public function __construct(string $templatesPath, string $layoutsPath)
     {
-        $this->templatePath = $templatePath;
+        $this->templatesPath = $templatesPath;
         $this->layoutsPath = $layoutsPath;
         $this->helpers = [];
     }
@@ -39,22 +39,11 @@ class Template implements \pulledbits\View\Template
      * @param array $parameters
      * @return resource
      */
-    public function capture(array $parameters)
+    public function capture(string $templateIdentifier, array $parameters)
     {
         ob_start();
-        $this->render($parameters);
+        $this->render($templateIdentifier, $parameters);
         return ob_get_clean();
-    }
-
-    /**
-     * @param string $templateIdentifier
-     * @return \pulledbits\View\Template
-     */
-    private function sub(string $templateIdentifier): \pulledbits\View\Template
-    {
-        $template = new self(dirname($this->templatePath) . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->layoutsPath);
-        $template->helpers = $this->helpers;
-        return $template;
     }
 
     /**
@@ -120,7 +109,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @param array $parameters
      */
-    public function render(array $parameters): void
+    public function render(string $templateIdentifier, array $parameters): void
     {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
@@ -131,6 +120,6 @@ class Template implements \pulledbits\View\Template
             }
         }
         extract($variables);
-        include $this->templatePath;
+        include $this->templatesPath . DIRECTORY_SEPARATOR . $templateIdentifier . '.php';
     }
 }

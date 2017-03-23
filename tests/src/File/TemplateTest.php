@@ -14,18 +14,26 @@ use pulledbits\View\File\Template;
 class TemplateTest extends \PHPUnit_Framework_TestCase
 {
     private $templatePath;
+    private $templateIdentifier;
+
+    /**
+     * @var Template
+     */
     private $object;
 
     protected function setUp()
     {
-        $this->templatePath = tempnam(sys_get_temp_dir(), 'tt_');
+        $this->templatePath = tempnam(sys_get_temp_dir(), 'tt_') . '.php';
+        $this->templateIdentifier = basename($this->templatePath, '.php');
 
-        $this->object = new Template($this->templatePath, sys_get_temp_dir(), sys_get_temp_dir());
+        $this->object = new Template(sys_get_temp_dir(), sys_get_temp_dir());
     }
 
     protected function tearDown()
     {
-        unlink($this->templatePath);
+        if (file_exists($this->templatePath)) {
+            unlink($this->templatePath);
+        }
     }
 
     public function testRender_When_ExistingTemplateWithNoVariables_Expect_ContentsOutputted()
@@ -34,7 +42,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         file_put_contents($this->templatePath, '<html>BlaBla</html>' . $variable);
 
         $this->expectOutputString('<html>BlaBla</html>' . $variable);
-        $this->object->render([]);
+        $this->object->render($this->templateIdentifier, []);
     }
 
 
@@ -43,8 +51,8 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         $variable = microtime();
         file_put_contents($this->templatePath, '<html><?=$foo?>BlaBla</html>' . $variable);
 
-        $this->assertEquals('<html>barBlaBla</html>' . $variable, $this->object->capture(['foo' => 'bar']));
-        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, $this->object->capture(['foo' => 'bar2']));
+        $this->assertEquals('<html>barBlaBla</html>' . $variable, $this->object->capture($this->templateIdentifier, ['foo' => 'bar']));
+        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, $this->object->capture($this->templateIdentifier, ['foo' => 'bar2']));
     }
 
 
@@ -53,14 +61,14 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         $variable = microtime();
         file_put_contents($this->templatePath, '<html>BlaBla</html>' . $variable);
 
-        $this->assertEquals('<html>BlaBla</html>' . $variable, $this->object->capture([]));
+        $this->assertEquals('<html>BlaBla</html>' . $variable, $this->object->capture($this->templateIdentifier, []));
     }
 
     public function testCapture_When_NestedVoidHelpers_Expect_ContentsOutputted()
     {
         file_put_contents($this->templatePath, '<html><?php $this->bar();?></html>');
 
-        $this->assertEquals('<html>Bla</html>', $this->object->capture([
+        $this->assertEquals('<html>Bla</html>', $this->object->capture($this->templateIdentifier, [
             'foo' => function() : void { print 'Bla'; },
             'bar' => function() : void { $this->foo(); }
         ]));
@@ -75,22 +83,9 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         file_put_contents($this->templatePath, '<?php $layout = $this->layout(\'' . basename($layoutPath) . '\'); ?>');
 
         $this->expectOutputString('<html>BlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->templateIdentifier, []);
 
         unlink($layoutPath . '.php');
-    }
-
-
-    public function testRender_When_ExistingTemplateWithSubTemplate_Expect_ContentsOutputted()
-    {
-        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($subtemplatePath . '.php', '<html>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
-
-        $this->expectOutputString('<html>BlaBla</html>');
-        $this->object->render([]);
-
-        unlink($subtemplatePath . '.php');
     }
 
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()
@@ -98,7 +93,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         file_put_contents($this->templatePath, '<html><?=$foo?>BlaBla</html>');
 
         $this->expectOutputString('<html>barBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->templateIdentifier, [
             'foo' => 'bar'
         ]);
     }
@@ -109,7 +104,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         file_put_contents($this->templatePath, '<html><?=$this->escape($foo);?>BlaBla</html>');
 
         $this->expectOutputString('<html>&lt;bar&gt;BlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->templateIdentifier, [
             'foo' => '<bar>'
         ]);
     }
@@ -127,7 +122,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/&lt;&gt;/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->templateIdentifier, []);
     }
 
     public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_OBContentsWithHelperOutput()
@@ -138,7 +133,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->templateIdentifier, []);
     }
 
     public function testRender_When_HelperRegisteredNoReturnType_Expect_OBContentsWithHelperOutput()
@@ -149,7 +144,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->templateIdentifier, []);
     }
 
     public function testRender_When_HelperRegisteredOtherReturnType_Expect_EmptyString()
@@ -161,75 +156,37 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->expectOutputString('<html>BlaBla</html>');
-        $this->object->render([]);
-    }
-
-    public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutputInSubTemplate()
-    {
-        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
-        $this->object->registerHelper('url', function(string $path): string {
-            return 'https://example.com' . $path;
-        });
-
-        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([]);
-
-        unlink($subtemplatePath . '.php');
+        $this->object->render($this->templateIdentifier, []);
     }
 
     public function testRender_When_HelperUsingOtherHelper_Expect_ContentsWithHelperHelper()
     {
-        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
+        file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
         $this->object->registerHelper('url', function(string $path): string {
             return 'https://' . $this->host() . $path;
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->templateIdentifier, [
             'host' => function(): string {
                 return 'example.com';
             }
         ]);
-
-        unlink($subtemplatePath . '.php');
     }
 
 
     public function testRender_When_HelperUsingOtherPrivateHelper_Expect_ContentsWithHelperHelper()
     {
-        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
+        file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
         $this->object->registerHelper('url', function(string $path): string {
             return 'https://' . $this->host() . $path;
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->templateIdentifier, [
             'host' => function(): string {
                 return 'example.com';
             }
         ]);
-
-        unlink($subtemplatePath . '.php');
-    }
-
-    public function testRender_When_HelperRegisteredThroughRenderArgument_Expect_ContentsWithHelperOutputInSubTemplate()
-    {
-        $subtemplatePath = tempnam(sys_get_temp_dir(), 'tt_');
-        file_put_contents($subtemplatePath . '.php', '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $this->sub(\'' . basename($subtemplatePath) . '\')->render([]); ?>');
-        $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([
-            'url' => function(string $path): string {
-                return 'https://example.com' . $path;
-            }
-        ]);
-
-        unlink($subtemplatePath . '.php');
     }
 }

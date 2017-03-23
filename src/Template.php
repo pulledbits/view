@@ -13,12 +13,12 @@ interface Template
      * @param array $variables
      * @return resource
      */
-    public function capture(array $variables);
+    public function capture(string $templateIdentifier, array $parameters);
 
     /**
      * @param array $variables
      */
-    public function render(array $variables) : void;
+    public function render(string $templateIdentifier, array $parameters): void;
 
     /**
      * @param string $identifier
