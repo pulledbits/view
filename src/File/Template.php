@@ -18,7 +18,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @var string
      */
-    private $templatesPath;
+    private $templatePath;
 
     /**
      * @var array
@@ -27,12 +27,12 @@ class Template implements \pulledbits\View\Template
 
     /**
      * Template constructor.
-     * @param string $templatesPath
+     * @param string $templatePath
      */
-    public function __construct(Directory $directory, string $templatesPath)
+    public function __construct(Directory $directory, string $templatePath)
     {
         $this->directory = $directory;
-        $this->templatesPath = $templatesPath;
+        $this->templatePath = $templatePath;
         $this->helpers = [];
     }
 
@@ -40,10 +40,10 @@ class Template implements \pulledbits\View\Template
      * @param array $parameters
      * @return resource
      */
-    public function capture(string $templateIdentifier, array $parameters)
+    public function capture(array $parameters)
     {
         ob_start();
-        $this->render($templateIdentifier, $parameters);
+        $this->render($parameters);
         return ob_get_clean();
     }
 
@@ -110,7 +110,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @param array $parameters
      */
-    public function render(string $templateIdentifier, array $parameters): void
+    public function render(array $parameters): void
     {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
@@ -121,6 +121,6 @@ class Template implements \pulledbits\View\Template
             }
         }
         extract($variables);
-        include $this->templatesPath . DIRECTORY_SEPARATOR . $templateIdentifier . '.php';
+        include $this->templatePath;
     }
 }
