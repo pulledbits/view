@@ -60,7 +60,7 @@ class Template implements \pulledbits\View\Template
      */
     private function layout(string $layoutIdentifier): \pulledbits\View\Layout
     {
-        return new Layout($this->layoutsPath . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
+        return $this->directory->layout($layoutIdentifier);
     }
 
     /**

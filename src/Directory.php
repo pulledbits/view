@@ -6,16 +6,30 @@ namespace pulledbits\View;
 
 class Directory
 {
-    private $directory;
+    private $directoryTemplates;
+    private $directoryLayouts;
 
-    public function __construct(string $directory)
+    public function __construct(string $directoryTemplates, string $directoryLayouts)
     {
-        $this->directory = $directory;
+        $this->directoryTemplates = $directoryTemplates;
+        $this->directoryLayouts = $directoryLayouts;
     }
 
-
-    public function load(string $templateIdentifier)
+    /**
+     * @param string $templateIdentifier
+     * @return Template
+     */
+    public function load(string $templateIdentifier) : Template
     {
-        return new \pulledbits\View\File\Template($this,$this->directory . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->directory . DIRECTORY_SEPARATOR . 'layouts');
+        return new File\Template($this,$this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->directoryTemplates . DIRECTORY_SEPARATOR . 'layouts');
+    }
+
+    /**
+     * @param string $layoutIdentifier
+     * @return Layout
+     */
+    public function layout(string $layoutIdentifier): Layout
+    {
+        return new File\Layout($this->directoryLayouts . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 }

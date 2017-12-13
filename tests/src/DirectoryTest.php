@@ -9,7 +9,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
     public function testLoad_When_ExistingTemplateFile_Expect_ValidTemplate() {
         $templateFilename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'test.php';
         file_put_contents($templateFilename, '<?php print "Hello World";');
-        $object = new Directory(sys_get_temp_dir());
+        $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'layouts');
 
         $this->assertEquals(new \pulledbits\View\File\Template($object, $templateFilename, sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'layouts'), $object->load('test'));
     }
