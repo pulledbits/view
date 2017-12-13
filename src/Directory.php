@@ -21,7 +21,11 @@ class Directory
      */
     public function load(string $templateIdentifier) : Template
     {
-        return new File\Template($this,$this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
+        $layoutIdentifier = 'master';
+        if (strpos($templateIdentifier, '.') !== false) {
+            $layoutIdentifier = substr($templateIdentifier, 0, strpos($templateIdentifier, '.'));
+        }
+        return new File\Template($this->layout($layoutIdentifier),$this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
     }
 
     /**

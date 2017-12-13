@@ -10,6 +10,7 @@ namespace File;
 
 use pulledbits\View\Directory;
 use pulledbits\View\File\Template;
+use pulledbits\View\Layout;
 
 
 class TemplateTest extends \PHPUnit\Framework\TestCase
@@ -22,11 +23,30 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     private $object;
 
+    private $layout;
+
     protected function setUp()
     {
         $this->templatePath = tempnam(sys_get_temp_dir(), 'tt_') . '.php';
 
-        $this->object = new Template(new Directory(sys_get_temp_dir(), sys_get_temp_dir()), $this->templatePath);
+        $this->layout = new class implements Layout {
+
+            private $sections = [];
+
+            public $content = '';
+
+            /**
+             * @param string $sectionIdentifier
+             * @param string|null $content
+             * @return mixed
+             */
+            public function section(string $sectionIdentifier, string $content = null)
+            {
+
+            }
+        };
+
+        $this->object = new Template($this->layout, $this->templatePath);
     }
 
     protected function tearDown()
@@ -78,14 +98,39 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
     public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
     {
-        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
-        file_put_contents($layoutPath . '.php', '<html>BlaBla</html>');
-        file_put_contents($this->templatePath, '<?php $layout = $this->layout(\'' . basename($layoutPath) . '\'); ?>');
+        $layout = new class implements Layout {
 
-        $this->expectOutputString('<html>BlaBla</html>');
-        $this->object->render([]);
+            private $sections = [];
 
-        unlink($layoutPath . '.php');
+            public $content = '<html>BlaBlaLayout</html>';
+
+            public function __construct()
+            {
+                ob_start();
+            }
+
+            public function __destruct()
+            {
+                ob_end_flush();
+                print $this->content;
+            }
+
+            /**
+             * @param string $sectionIdentifier
+             * @param string|null $content
+             * @return mixed
+             */
+            public function section(string $sectionIdentifier, string $content = null)
+            {
+
+            }
+        };
+
+        $object = new Template($layout, $this->templatePath);
+        file_put_contents($this->templatePath, '<?php $layout = $this->layout(); ?>');
+
+        $this->expectOutputString('<html>BlaBlaLayout</html>');
+        $object->render([]);
     }
 
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()

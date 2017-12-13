@@ -11,9 +11,9 @@ use pulledbits\View\Directory;
 class Template implements \pulledbits\View\Template
 {
     /**
-     * @var Directory
+     * @var \pulledbits\View\Layout
      */
-    private $directory;
+    private $layout;
 
     /**
      * @var string
@@ -29,9 +29,9 @@ class Template implements \pulledbits\View\Template
      * Template constructor.
      * @param string $templatePath
      */
-    public function __construct(Directory $directory, string $templatePath)
+    public function __construct(\pulledbits\View\Layout $layout, string $templatePath)
     {
-        $this->directory = $directory;
+        $this->layout = $layout;
         $this->templatePath = $templatePath;
         $this->helpers = [];
     }
@@ -47,13 +47,9 @@ class Template implements \pulledbits\View\Template
         return ob_get_clean();
     }
 
-    /**
-     * @param string $layoutIdentifier
-     * @return \pulledbits\View\Layout
-     */
-    private function layout(string $layoutIdentifier): \pulledbits\View\Layout
+    private function layout(): \pulledbits\View\Layout
     {
-        return $this->directory->layout($layoutIdentifier);
+        return $this->layout;
     }
 
     /**
