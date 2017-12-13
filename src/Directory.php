@@ -16,6 +16,6 @@ class Directory
 
     public function load(string $templateIdentifier)
     {
-        return new \pulledbits\View\File\Template($this->directory . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->directory . DIRECTORY_SEPARATOR . 'layouts');
+        return new \pulledbits\View\File\Template($this,$this->directory . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $this->directory . DIRECTORY_SEPARATOR . 'layouts');
     }
 }

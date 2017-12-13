@@ -1,6 +1,8 @@
 <?php
 namespace pulledbits\View\File;
 
+use pulledbits\View\Directory;
+
 
 /**
  * Class Template
@@ -8,6 +10,11 @@ namespace pulledbits\View\File;
  */
 class Template implements \pulledbits\View\Template
 {
+    /**
+     * @var Directory
+     */
+    private $directory;
+
     /**
      * @var string
      */
@@ -28,8 +35,9 @@ class Template implements \pulledbits\View\Template
      * @param string $templatesPath
      * @param string $layoutsPath
      */
-    public function __construct(string $templatesPath, string $layoutsPath)
+    public function __construct(Directory $directory, string $templatesPath, string $layoutsPath)
     {
+        $this->directory = $directory;
         $this->templatesPath = $templatesPath;
         $this->layoutsPath = $layoutsPath;
         $this->helpers = [];
