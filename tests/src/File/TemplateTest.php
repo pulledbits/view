@@ -27,7 +27,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $this->templatePath = tempnam(sys_get_temp_dir(), 'tt_') . '.php';
         $this->templateIdentifier = basename($this->templatePath, '.php');
 
-        $this->object = new Template(new Directory(sys_get_temp_dir(), sys_get_temp_dir()), sys_get_temp_dir(), sys_get_temp_dir());
+        $this->object = new Template(new Directory(sys_get_temp_dir(), sys_get_temp_dir()), sys_get_temp_dir());
     }
 
     protected function tearDown()

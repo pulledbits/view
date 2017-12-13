@@ -21,11 +21,6 @@ class Template implements \pulledbits\View\Template
     private $templatesPath;
 
     /**
-     * @var string
-     */
-    private $layoutsPath;
-
-    /**
      * @var array
      */
     private $helpers;
@@ -33,13 +28,11 @@ class Template implements \pulledbits\View\Template
     /**
      * Template constructor.
      * @param string $templatesPath
-     * @param string $layoutsPath
      */
-    public function __construct(Directory $directory, string $templatesPath, string $layoutsPath)
+    public function __construct(Directory $directory, string $templatesPath)
     {
         $this->directory = $directory;
         $this->templatesPath = $templatesPath;
-        $this->layoutsPath = $layoutsPath;
         $this->helpers = [];
     }
 
