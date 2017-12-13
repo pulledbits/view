@@ -9,7 +9,7 @@
 namespace pulledbits\View\File;
 
 
-class LayoutTest extends \PHPUnit_Framework_TestCase
+class LayoutTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testRender_When_NoSectionsAndExistingLayout_Expect_LayoutContentsPrinted()

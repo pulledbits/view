@@ -11,7 +11,7 @@ namespace File;
 use pulledbits\View\File\Template;
 
 
-class TemplateTest extends \PHPUnit_Framework_TestCase
+class TemplateTest extends \PHPUnit\Framework\TestCase
 {
     private $templatePath;
     private $templateIdentifier;

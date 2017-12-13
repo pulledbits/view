@@ -2,13 +2,11 @@
 	"name" : "pulledbits/view",
 	"description" : "native PHP view engine",
 	"license" : "MIT",
-	"minimum-stability" : "dev",
-	"prefer-stable" : true,
 	"require" : {
 		"php" : ">=7.1"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : "~5"
+		"phpunit/phpunit" : "~6"
 	},
 	"autoload" : {
 		"psr-4" : {
