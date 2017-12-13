@@ -47,11 +47,6 @@ class Template implements \pulledbits\View\Template
         return ob_get_clean();
     }
 
-    private function layout(): \pulledbits\View\Layout
-    {
-        return $this->layout;
-    }
-
     /**
      * @param string $unsafestring
      * @return string
@@ -59,6 +54,14 @@ class Template implements \pulledbits\View\Template
     private function escape(string $unsafestring)
     {
         return htmlentities($unsafestring);
+    }
+
+    private function section(string $sectionIdentifier, string $content = null) {
+        if ($content !== null) {
+            $this->layout->section($sectionIdentifier, $this->escape($content));
+        } else {
+            $this->layout->section($sectionIdentifier);
+        }
     }
 
     /**

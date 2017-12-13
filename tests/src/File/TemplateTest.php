@@ -98,38 +98,14 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
     public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
     {
-        $layout = new class implements Layout {
-
-            private $sections = [];
-
-            public $content = '<html>BlaBlaLayout</html>';
-
-            public function __construct()
-            {
-                ob_start();
-            }
-
-            public function __destruct()
-            {
-                ob_end_flush();
-                print $this->content;
-            }
-
-            /**
-             * @param string $sectionIdentifier
-             * @param string|null $content
-             * @return mixed
-             */
-            public function section(string $sectionIdentifier, string $content = null)
-            {
-
-            }
-        };
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
+        file_put_contents($layoutPath, '<html><?= $this->harvest("foobar"); ?>BlaBlaLayout</html>');
+        $layout = new \pulledbits\View\File\Layout($layoutPath);
 
         $object = new Template($layout, $this->templatePath);
-        file_put_contents($this->templatePath, '<?php $layout = $this->layout(); ?>');
+        file_put_contents($this->templatePath, '<?php $this->section("foobar", "Cöntent"); ?>');
 
-        $this->expectOutputString('<html>BlaBlaLayout</html>');
+        $this->expectOutputString('<html>C&ouml;ntentBlaBlaLayout</html>');
         $object->render([]);
     }
 

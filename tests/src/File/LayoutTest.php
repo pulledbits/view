@@ -94,7 +94,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         file_put_contents($layoutPath, '<?php $layout = $this->layout(\'' . basename($parentLayoutPath) . '\'); $layout->section(\'title\', \'Hëllo World!\'); ?>');
         $object = new Layout($layoutPath);
 
-        $this->expectOutputString('<html><title>H&euml;llo World!</title>BlaBla</html>');
+        $this->expectOutputString('<html><title>Hëllo World!</title>BlaBla</html>');
         unset($object);
 
         unlink($layoutPath);
