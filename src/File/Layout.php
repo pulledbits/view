@@ -44,10 +44,8 @@ class Layout implements \pulledbits\View\Layout  {
     }
 
     public function record() : void {
-        ob_start();
     }
     public function recordTemplate(\pulledbits\View\Template $template, array $parameters) : void {
-        ob_start();
         $parameters['layout'] = $this;
         $template->render($parameters);
         $this->play();
@@ -55,8 +53,6 @@ class Layout implements \pulledbits\View\Layout  {
 
     public function play() : void {
         if ($this->currentSectionIdentifier !== null) {
-            $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
-        } else {
             ob_end_flush();
         }
 
@@ -78,12 +74,15 @@ class Layout implements \pulledbits\View\Layout  {
         if ($content !== null) {
             $this->sections[$sectionIdentifier] = $content;
             return;
-        } elseif ($this->currentSectionIdentifier !== null) {
-            $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
-            ob_start();
         }
 
+        if ($this->currentSectionIdentifier !== null) {
+            ob_end_flush();
+        }
         $this->currentSectionIdentifier = $sectionIdentifier;
+        ob_start(function(string $buffer) {
+            $this->sections[$this->currentSectionIdentifier] = $buffer;
+        });
     }
 
     /**

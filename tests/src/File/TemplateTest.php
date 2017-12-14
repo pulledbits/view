@@ -81,6 +81,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $layout = new \pulledbits\View\File\Layout($layoutPath);
         $object = new Template($this->templatePath);
         file_put_contents($this->templatePath, '<?php $layout->section("foobar", $this->escape("Cöntent")); ?>');
+
         $this->expectOutputString('<html>C&ouml;ntentBlaBlaLayout</html>');
         $layout->recordTemplate($object, []);
     }

@@ -48,7 +48,6 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->expectOutputString('<html>barBlaBli</html>');
         $object->play();
 
-
         unlink($layoutPath);
     }
 
