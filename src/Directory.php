@@ -9,6 +9,8 @@ class Directory
     private $directoryTemplates;
     private $directoryLayouts;
 
+    private $helpers = [];
+
     public function __construct(string $directoryTemplates, string $directoryLayouts)
     {
         $this->directoryTemplates = $directoryTemplates;
@@ -21,7 +23,11 @@ class Directory
      */
     public function load(string $templateIdentifier) : Template
     {
-        return new File\Template($this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
+        $template = new File\Template($this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
+        foreach ($this->helpers  as $helperIdentifier => $helper) {
+            $template->registerHelper($helperIdentifier, clone $helper);
+        }
+        return $template;
     }
 
     /**
@@ -31,5 +37,10 @@ class Directory
     public function layout(string $layoutIdentifier): Layout
     {
         return \pulledbits\View\File\Layout::load($this->directoryLayouts, $layoutIdentifier);
+    }
+
+    public function registerHelper(string $identifier, callable $callback) : void
+    {
+        $this->helpers[$identifier] = $callback;
     }
 }
