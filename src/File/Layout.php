@@ -35,12 +35,7 @@ class Layout implements \pulledbits\View\Layout  {
 
     public static function load(string $layoutsDirectory, string $layoutIdentifier) : self
     {
-        $layout = new self($layoutsDirectory . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
-        if (strpos($layoutIdentifier, '.') !== false) {
-            $parentLayoutIdentifier = substr($layoutIdentifier, 0, strpos($layoutIdentifier, '.'));
-            $layout->extends = self::load($layoutsDirectory, $parentLayoutIdentifier);
-        }
-        return $layout;
+        return new self($layoutsDirectory . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 
     public function compile() : void {
@@ -82,5 +77,9 @@ class Layout implements \pulledbits\View\Layout  {
      */
     private function harvest(string $sectionIdentifier) {
         return $this->sections[$sectionIdentifier];
+    }
+
+    private function layout(string $layoutIdentifier) : self {
+        return self::load(dirname($this->layoutPath), $layoutIdentifier);
     }
 }

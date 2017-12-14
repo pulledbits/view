@@ -72,10 +72,10 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_LayoutExtendsOtherLayout_Expect_LayoutContentsPrinted()
     {
         $parentLayoutPath = tempnam(sys_get_temp_dir(), 'lpt_') . '.php';
-        $layoutPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . basename($parentLayoutPath, '.php') . '.' . uniqid() . '.php';
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_') . '.php';
 
         file_put_contents($parentLayoutPath, '<html>BlaBlu</html>');
-        file_put_contents($layoutPath, '<?php ?>');
+        file_put_contents($layoutPath, '<?php $layout = $this->layout("' . basename($parentLayoutPath, '.php') . '"); $layout->compile(); ?>');
 
         $object = Layout::load(sys_get_temp_dir(), basename($layoutPath, '.php'));
 
@@ -89,10 +89,10 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_LayoutExtendsOtherLayoutUsingHarvest_Expect_LayoutContentsPrinted()
     {
         $parentLayoutPath = tempnam(sys_get_temp_dir(), 'lpt_') . '.php';
-        $layoutPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . basename($parentLayoutPath, '.php') . '.' . uniqid() . '.php';
+        $layoutPath = tempnam(sys_get_temp_dir(), 'lt_') . '.php';
 
         file_put_contents($parentLayoutPath, '<html><title><?=$this->harvest(\'title\');?></title>BlaBla</html>');
-        file_put_contents($layoutPath, '<?php $layout->section(\'title\', \'Hëllo World!\'); ?>');
+        file_put_contents($layoutPath, '<?php $layout = $this->layout("' . basename($parentLayoutPath, '.php') . '"); $layout->section(\'title\', \'Hëllo World!\'); $layout->compile(); ?>');
         $object = Layout::load(sys_get_temp_dir(), basename($layoutPath, '.php'));
 
         $this->expectOutputString('<html><title>Hëllo World!</title>BlaBla</html>');
