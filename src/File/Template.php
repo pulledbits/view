@@ -106,19 +106,4 @@ class Template implements \pulledbits\View\Template
 
         include $this->templatePath;
     }
-
-    public function renderWithoutLayout(array $parameters): void
-    {
-        $variables = [];
-        foreach ($parameters as $parameterIdentifier => $parameter) {
-            if (is_callable($parameter)) {
-                $this->registerHelper($parameterIdentifier, $parameter);
-            } else {
-                $variables[$parameterIdentifier] = $parameter;
-            }
-        }
-        extract($variables);
-
-        include $this->templatePath;
-    }
 }
