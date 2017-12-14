@@ -113,7 +113,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         $object = $this->template->prepare([]);
 
         $this->expectException('\\PHPUnit\\Framework\\Error\\Error');
-        $this->expectExceptionMessage('Call to undefined method ' . get_class($this->template) . '::nonExistingHelper');
+        $this->expectExceptionMessage('Call to undefined method ' . get_class($object) . '::nonExistingHelper');
         $object->__call('nonExistingHelper', []);
     }
 

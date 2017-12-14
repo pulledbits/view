@@ -27,59 +27,10 @@ class Template implements \pulledbits\View\Template
     {
         $this->templatePath = $templatePath;
         $this->helpers = [];
-    }
-
-    /**
-     * @param array $parameters
-     * @return resource
-     */
-    public function capture(array $parameters)
-    {
-        ob_start();
-        $this->render($parameters);
-        return ob_get_clean();
-    }
-
-    /**
-     * @param string $unsafestring
-     * @return string
-     */
-    public function escape(string $unsafestring)
-    {
-        return htmlentities($unsafestring);
-    }
-
-    /**
-     * @param string $identifier
-     * @param array $arguments
-     * @return string
-     */
-    public function __call(string $identifier, array $arguments): string
-    {
-        if (array_key_exists($identifier, $this->helpers) === false) {
-            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $identifier, E_USER_ERROR);
-        }
-
-        $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
-        if ($helperReflection->hasReturnType() === false) {
-            call_user_func_array($this->helpers[$identifier], $arguments);
-            return '';
-        }
-
-        switch ($helperReflection->getReturnType()) {
-            case 'string':
-                return call_user_func_array($this->helpers[$identifier], $arguments);
-
-            case 'void':
-                call_user_func_array($this->helpers[$identifier], $arguments);
-                return '';
-
-            default:
-                ob_start();
-                call_user_func_array($this->helpers[$identifier], $arguments);
-                ob_end_clean();
-                return '';
-        }
+        $this->registerHelper('escape', function(string $unsafestring) : string
+        {
+            return htmlentities($unsafestring);
+        });
     }
 
     /**
@@ -91,21 +42,11 @@ class Template implements \pulledbits\View\Template
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function render(array $variables): void
-    {
-        extract($variables);
-        include $this->templatePath;
-    }
-
     public function prepare(array $parameters) : TemplateInstance {
-        $instance = new TemplateInstance($this, $this->templatePath, $parameters);
+        $instance = new TemplateInstance($this->templatePath, $parameters);
         foreach ($this->helpers as $helperIdentifier => $helper) {
             $instance->registerHelper($helperIdentifier, clone$helper);
         }
-        $instance->registerHelper('escape', function(string $unsafestring) : string
-        {
-            return htmlentities($unsafestring);
-        });
         return $instance;
     }
 }

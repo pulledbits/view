@@ -6,16 +6,14 @@ namespace pulledbits\View;
 
 class TemplateInstance implements Renderable
 {
-    private $template;
     private $templatePath;
 
     private $variables;
 
     private $helpers;
 
-    public function __construct(Template $template, string $templatePath, array $parameters)
+    public function __construct(string $templatePath, array $parameters)
     {
-        $this->template = $template;
         $this->templatePath = $templatePath;
         $this->variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
@@ -35,7 +33,7 @@ class TemplateInstance implements Renderable
     public function __call(string $identifier, array $arguments): string
     {
         if (array_key_exists($identifier, $this->helpers) === false) {
-            $this->template->__call(...func_get_args());
+            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $identifier, E_USER_ERROR);
         }
 
         $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
