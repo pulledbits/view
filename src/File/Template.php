@@ -45,7 +45,7 @@ class Template implements \pulledbits\View\Template
     public function prepare(array $parameters) : TemplateInstance {
         $instance = new TemplateInstance($this->templatePath, $parameters);
         foreach ($this->helpers as $helperIdentifier => $helper) {
-            $instance->registerHelper($helperIdentifier, clone$helper);
+            $instance->registerHelper($helperIdentifier, $helper);
         }
         return $instance;
     }

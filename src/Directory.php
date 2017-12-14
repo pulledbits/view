@@ -25,7 +25,7 @@ class Directory
     {
         $template = new File\Template($this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
         foreach ($this->helpers  as $helperIdentifier => $helper) {
-            $template->registerHelper($helperIdentifier, clone $helper);
+            $template->registerHelper($helperIdentifier, $helper);
         }
 
         $directory = $this;
