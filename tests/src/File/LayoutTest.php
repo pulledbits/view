@@ -19,7 +19,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $object = new Layout($layoutPath);
 
         $this->expectOutputString('<html>BlaBla</html>');
-        $object->play();
+        $object->compile();
         unlink($layoutPath);
     }
 
@@ -31,7 +31,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
         $object->section('foo', 'bar');
         $this->expectOutputString('<html>barBlaBlo</html>');
-        $object->play();
+        $object->compile();
 
         unlink($layoutPath);
     }
@@ -45,7 +45,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         print 'bar';
 
         $this->expectOutputString('<html>barBlaBli</html>');
-        $object->play();
+        $object->compile();
 
         unlink($layoutPath);
     }
@@ -63,7 +63,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         print '<footer>Blabla</footer>';
 
         $this->expectOutputString('<html>blablabarBlaBle<footer>Blabla</footer></html>');
-        $object->play();
+        $object->compile();
 
 
         unlink($layoutPath);
@@ -80,7 +80,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $object = Layout::load(sys_get_temp_dir(), basename($layoutPath, '.php'));
 
         $this->expectOutputString('<html>BlaBlu</html>');
-        $object->play();
+        $object->compile();
 
         unlink($layoutPath);
         unlink($parentLayoutPath);
@@ -96,7 +96,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $object = Layout::load(sys_get_temp_dir(), basename($layoutPath, '.php'));
 
         $this->expectOutputString('<html><title>Hëllo World!</title>BlaBla</html>');
-        $object->play();
+        $object->compile();
 
         unlink($layoutPath);
         unlink($parentLayoutPath);

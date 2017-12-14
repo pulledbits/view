@@ -46,10 +46,10 @@ class Layout implements \pulledbits\View\Layout  {
     public function record(\pulledbits\View\Template $template, array $parameters) : void {
         $parameters['layout'] = $this;
         $template->render($parameters);
-        $this->play();
+        $this->compile();
     }
 
-    public function play() : void {
+    public function compile() : void {
         if ($this->currentSectionIdentifier !== null) {
             ob_end_flush();
         }
@@ -59,7 +59,7 @@ class Layout implements \pulledbits\View\Layout  {
         } else {
             $layout = $this->extends;
             include $this->layoutPath;
-            $this->extends->play();
+            $this->extends->compile();
         }
     }
 
