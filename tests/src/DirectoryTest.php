@@ -38,7 +38,9 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals("TestTest", $object->load($templateIdentifier)->capture($this->layout, []));
+        $this->assertEquals("TestTest", $object->load($templateIdentifier)->capture([
+            'layout' => $this->layout
+        ]));
     }
 
     public function testLoad_When_ExistingTemplateFile_Expect_SubTemplatesHelper() {
@@ -52,7 +54,9 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('bar', $object->load($templateIdentifier)->capture($this->layout, []));
+        $this->assertEquals('bar', $object->load($templateIdentifier)->capture([
+            'layout' => $this->layout
+        ]));
     }
 
     public function testLoad_When_HelpersRegisterd_Expect_TemplateWithHelpers() {
@@ -67,7 +71,9 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $expectedTemplate = new File\Template($templateFilename);
         $expectedTemplate->registerHelper('test', $helper);
-        $this->assertEquals("FooBarTest", $object->load($templateIdentifier)->capture($this->layout, []));
+        $this->assertEquals("FooBarTest", $object->load($templateIdentifier)->capture([
+            'layout' => $this->layout
+        ]));
     }
 
 

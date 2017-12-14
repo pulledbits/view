@@ -34,10 +34,10 @@ class Template implements \pulledbits\View\Template
      * @param array $parameters
      * @return resource
      */
-    public function capture(\pulledbits\View\Layout $layout, array $parameters)
+    public function capture(array $parameters)
     {
         ob_start();
-        $this->render($layout, $parameters);
+        $this->render($parameters);
         return ob_get_clean();
     }
 
@@ -95,7 +95,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @param array $parameters
      */
-    public function render(\pulledbits\View\Layout $layout, array $parameters): void
+    public function render(array $parameters): void
     {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
