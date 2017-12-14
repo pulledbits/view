@@ -68,7 +68,7 @@ class Template implements \pulledbits\View\Template
 
         switch ($helperReflection->getReturnType()) {
             case 'string':
-                return $this->escape(call_user_func_array($this->helpers[$identifier], $arguments));
+                return call_user_func_array($this->helpers[$identifier], $arguments);
 
             case 'void':
                 call_user_func_array($this->helpers[$identifier], $arguments);
@@ -91,22 +91,21 @@ class Template implements \pulledbits\View\Template
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function render(array $parameters): void
+    public function render(array $variables): void
     {
-        $variables = [];
-        foreach ($parameters as $parameterIdentifier => $parameter) {
-            if (is_callable($parameter)) {
-                $this->registerHelper($parameterIdentifier, $parameter);
-            } else {
-                $variables[$parameterIdentifier] = $parameter;
-            }
-        }
         extract($variables);
-
         include $this->templatePath;
     }
 
     public function prepare(array $parameters) : TemplateInstance {
-        return new TemplateInstance($this, $parameters);
+        $instance = new TemplateInstance($this, $this->templatePath, $parameters);
+        foreach ($this->helpers as $helperIdentifier => $helper) {
+            $instance->registerHelper($helperIdentifier, clone$helper);
+        }
+        $instance->registerHelper('escape', function(string $unsafestring) : string
+        {
+            return htmlentities($unsafestring);
+        });
+        return $instance;
     }
 }

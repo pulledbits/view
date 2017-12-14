@@ -119,7 +119,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
 
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()
     {
-        file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
+        file_put_contents($this->templatePath, '<html><?=$this->escape($this->url(\'/path/to/file\'));?>BlaBla</html>');
         $this->template->registerHelper('url', function(string $path): string {
             return 'https://example.com/<>' . $path;
         });
