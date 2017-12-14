@@ -15,4 +15,9 @@ interface Layout
      * @return mixed
      */
     public function section(string $sectionIdentifier, string $content = null);
+
+
+    public function record() : void;
+
+    public function play() : void;
 }

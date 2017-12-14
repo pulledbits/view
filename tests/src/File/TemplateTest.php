@@ -44,6 +44,16 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
             {
 
             }
+
+            public function record(): void
+            {
+                // TODO: Implement record() method.
+            }
+
+            public function play(): void
+            {
+                // TODO: Implement play() method.
+            }
         };
 
         $this->object = new Template($this->layout, $this->templatePath);
@@ -101,12 +111,12 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
         file_put_contents($layoutPath, '<html><?= $this->harvest("foobar"); ?>BlaBlaLayout</html>');
         $layout = new \pulledbits\View\File\Layout($layoutPath);
-
         $object = new Template($layout, $this->templatePath);
         file_put_contents($this->templatePath, '<?php $this->section("foobar", "Cöntent"); ?>');
-
+        $layout->record();
         $this->expectOutputString('<html>C&ouml;ntentBlaBlaLayout</html>');
         $object->render([]);
+        $layout->play();
     }
 
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()

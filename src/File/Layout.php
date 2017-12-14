@@ -7,6 +7,9 @@ namespace pulledbits\View\File;
  * @package pulledbits\View\File
  */
 class Layout implements \pulledbits\View\Layout  {
+
+    private $extends;
+
     /**
      * @var string
      */
@@ -28,21 +31,36 @@ class Layout implements \pulledbits\View\Layout  {
     {
         $this->layoutPath = $layoutPath;
         $this->sections = [];
-        ob_start();
     }
 
-    /**
-     *
-     */
-    public function __destruct()
+    public static function load(string $layoutsDirectory, string $layoutIdentifier) : self
     {
+        $layout = new self($layoutsDirectory . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
+        if (strpos($layoutIdentifier, '.') !== false) {
+            $parentLayoutIdentifier = substr($layoutIdentifier, 0, strpos($layoutIdentifier, '.'));
+            $layout->extends = self::load($layoutsDirectory, $parentLayoutIdentifier);
+        }
+        return $layout;
+    }
+
+    public function record() : void {
+        ob_start();
+    }
+    public function play() : void {
         if ($this->currentSectionIdentifier !== null) {
             $this->sections[$this->currentSectionIdentifier] = ob_get_clean();
         } else {
             ob_end_flush();
         }
 
-        include $this->layoutPath;
+        if ($this->extends === null) {
+            include $this->layoutPath;
+        } else {
+            $this->extends->record();
+            $layout = $this->extends;
+            include $this->layoutPath;
+            $this->extends->play();
+        }
     }
 
     /**
@@ -67,14 +85,5 @@ class Layout implements \pulledbits\View\Layout  {
      */
     private function harvest(string $sectionIdentifier) {
         return $this->sections[$sectionIdentifier];
-    }
-
-    /**
-     * @param string $layoutIdentifier
-     * @return Layout
-     */
-    private function layout(string $layoutIdentifier) : Layout
-    {
-        return new self(dirname($this->layoutPath) . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
     }
 }

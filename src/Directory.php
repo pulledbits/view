@@ -34,6 +34,6 @@ class Directory
      */
     public function layout(string $layoutIdentifier): Layout
     {
-        return new File\Layout($this->directoryLayouts . DIRECTORY_SEPARATOR . $layoutIdentifier . '.php');
+        return \pulledbits\View\File\Layout::load($this->directoryLayouts, $layoutIdentifier);
     }
 }

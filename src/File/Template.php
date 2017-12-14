@@ -120,6 +120,7 @@ class Template implements \pulledbits\View\Template
             }
         }
         extract($variables);
+
         include $this->templatePath;
     }
 }
