@@ -37,12 +37,12 @@ class TemplateInstance implements Renderable
         }
 
         $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
+        $returnType = $helperReflection->getReturnType();
         if ($helperReflection->hasReturnType() === false) {
-            $this->helpers[$identifier](...$arguments);
-            return '';
+            $returnType = 'void';
         }
 
-        switch ($helperReflection->getReturnType()) {
+        switch ($returnType) {
             case 'string':
                 return $this->helpers[$identifier](...$arguments);
 
