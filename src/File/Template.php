@@ -1,6 +1,8 @@
 <?php
 namespace pulledbits\View\File;
 
+use pulledbits\View\TemplateInstance;
+
 /**
  * Class Template
  * @package pulledbits\View\File
@@ -42,7 +44,7 @@ class Template implements \pulledbits\View\Template
      * @param string $unsafestring
      * @return string
      */
-    private function escape(string $unsafestring)
+    public function escape(string $unsafestring)
     {
         return htmlentities($unsafestring);
     }
@@ -89,9 +91,6 @@ class Template implements \pulledbits\View\Template
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    /**
-     * @param array $parameters
-     */
     public function render(array $parameters): void
     {
         $variables = [];
@@ -105,5 +104,9 @@ class Template implements \pulledbits\View\Template
         extract($variables);
 
         include $this->templatePath;
+    }
+
+    public function prepare(array $parameters) : TemplateInstance {
+        return new TemplateInstance($this, $parameters);
     }
 }

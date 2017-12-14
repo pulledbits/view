@@ -16,5 +16,5 @@ interface Layout
      */
     public function section(string $sectionIdentifier, string $content = null);
 
-    public function record(\pulledbits\View\Template $template, array $parameters) : void;
+    public function record(\pulledbits\View\Renderable $renderable) : void;
 }

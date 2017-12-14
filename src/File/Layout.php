@@ -43,9 +43,8 @@ class Layout implements \pulledbits\View\Layout  {
         return $layout;
     }
 
-    public function record(\pulledbits\View\Template $template, array $parameters) : void {
-        $parameters['layout'] = $this;
-        $template->render($parameters);
+    public function record(\pulledbits\View\Renderable $renderable) : void {
+        $renderable->render($this);
         $this->compile();
     }
 
