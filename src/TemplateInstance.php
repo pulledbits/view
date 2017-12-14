@@ -38,21 +38,21 @@ class TemplateInstance implements Renderable
 
         $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
         if ($helperReflection->hasReturnType() === false) {
-            call_user_func_array($this->helpers[$identifier], $arguments);
+            $this->helpers[$identifier](...$arguments);
             return '';
         }
 
         switch ($helperReflection->getReturnType()) {
             case 'string':
-                return call_user_func_array($this->helpers[$identifier], $arguments);
+                return $this->helpers[$identifier](...$arguments);
 
             case 'void':
-                call_user_func_array($this->helpers[$identifier], $arguments);
+                $this->helpers[$identifier](...$arguments);
                 return '';
 
             default:
                 ob_start();
-                call_user_func_array($this->helpers[$identifier], $arguments);
+                $this->helpers[$identifier](...$arguments);
                 ob_end_clean();
                 return '';
         }
