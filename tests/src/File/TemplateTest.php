@@ -7,8 +7,6 @@
 
 namespace File;
 
-
-use pulledbits\View\Directory;
 use pulledbits\View\File\Template;
 use pulledbits\View\Layout;
 
@@ -56,7 +54,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
             }
         };
 
-        $this->object = new Template($this->layout, $this->templatePath);
+        $this->object = new Template($this->templatePath);
     }
 
     protected function tearDown()
@@ -72,7 +70,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         file_put_contents($this->templatePath, '<html>BlaBla</html>' . $variable);
 
         $this->expectOutputString('<html>BlaBla</html>' . $variable);
-        $this->object->render([]);
+        $this->object->render($this->layout, []);
     }
 
 
@@ -81,8 +79,8 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $variable = microtime();
         file_put_contents($this->templatePath, '<html><?=$foo?>BlaBla</html>' . $variable);
 
-        $this->assertEquals('<html>barBlaBla</html>' . $variable, $this->object->capture(['foo' => 'bar']));
-        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, $this->object->capture(['foo' => 'bar2']));
+        $this->assertEquals('<html>barBlaBla</html>' . $variable, $this->object->capture($this->layout, ['foo' => 'bar']));
+        $this->assertEquals('<html>bar2BlaBla</html>' . $variable, $this->object->capture($this->layout, ['foo' => 'bar2']));
     }
 
 
@@ -91,14 +89,14 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $variable = microtime();
         file_put_contents($this->templatePath, '<html>BlaBla</html>' . $variable);
 
-        $this->assertEquals('<html>BlaBla</html>' . $variable, $this->object->capture([]));
+        $this->assertEquals('<html>BlaBla</html>' . $variable, $this->object->capture($this->layout, []));
     }
 
     public function testCapture_When_NestedVoidHelpers_Expect_ContentsOutputted()
     {
         file_put_contents($this->templatePath, '<html><?php $this->bar();?></html>');
 
-        $this->assertEquals('<html>Bla</html>', $this->object->capture([
+        $this->assertEquals('<html>Bla</html>', $this->object->capture($this->layout, [
             'foo' => function() : void { print 'Bla'; },
             'bar' => function() : void { $this->foo(); }
         ]));
@@ -111,11 +109,11 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
         file_put_contents($layoutPath, '<html><?= $this->harvest("foobar"); ?>BlaBlaLayout</html>');
         $layout = new \pulledbits\View\File\Layout($layoutPath);
-        $object = new Template($layout, $this->templatePath);
-        file_put_contents($this->templatePath, '<?php $this->section("foobar", "Cöntent"); ?>');
+        $object = new Template($this->templatePath);
+        file_put_contents($this->templatePath, '<?php $layout->section("foobar", $this->escape("Cöntent")); ?>');
         $layout->record();
         $this->expectOutputString('<html>C&ouml;ntentBlaBlaLayout</html>');
-        $object->render([]);
+        $object->render($layout, []);
         $layout->play();
     }
 
@@ -124,7 +122,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         file_put_contents($this->templatePath, '<html><?=$foo?>BlaBla</html>');
 
         $this->expectOutputString('<html>barBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->layout, [
             'foo' => 'bar'
         ]);
     }
@@ -135,7 +133,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         file_put_contents($this->templatePath, '<html><?=$this->escape($foo);?>BlaBla</html>');
 
         $this->expectOutputString('<html>&lt;bar&gt;BlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->layout, [
             'foo' => '<bar>'
         ]);
     }
@@ -153,7 +151,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/&lt;&gt;/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->layout, []);
     }
 
     public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_OBContentsWithHelperOutput()
@@ -164,7 +162,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->layout, []);
     }
 
     public function testRender_When_HelperRegisteredNoReturnType_Expect_OBContentsWithHelperOutput()
@@ -175,7 +173,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->layout, []);
     }
 
     public function testRender_When_HelperRegisteredOtherReturnType_Expect_EmptyString()
@@ -187,7 +185,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>BlaBla</html>');
-        $this->object->render([]);
+        $this->object->render($this->layout, []);
     }
 
     public function testRender_When_HelperUsingOtherHelper_Expect_ContentsWithHelperHelper()
@@ -198,7 +196,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->layout, [
             'host' => function(): string {
                 return 'example.com';
             }
@@ -214,7 +212,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         });
 
         $this->expectOutputString('<html>https://example.com/path/to/fileBlaBla</html>');
-        $this->object->render([
+        $this->object->render($this->layout, [
             'host' => function(): string {
                 return 'example.com';
             }

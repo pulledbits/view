@@ -11,11 +11,6 @@ use pulledbits\View\Directory;
 class Template implements \pulledbits\View\Template
 {
     /**
-     * @var \pulledbits\View\Layout
-     */
-    private $layout;
-
-    /**
      * @var string
      */
     private $templatePath;
@@ -29,9 +24,8 @@ class Template implements \pulledbits\View\Template
      * Template constructor.
      * @param string $templatePath
      */
-    public function __construct(\pulledbits\View\Layout $layout, string $templatePath)
+    public function __construct(string $templatePath)
     {
-        $this->layout = $layout;
         $this->templatePath = $templatePath;
         $this->helpers = [];
     }
@@ -40,10 +34,10 @@ class Template implements \pulledbits\View\Template
      * @param array $parameters
      * @return resource
      */
-    public function capture(array $parameters)
+    public function capture(\pulledbits\View\Layout $layout, array $parameters)
     {
         ob_start();
-        $this->render($parameters);
+        $this->render($layout, $parameters);
         return ob_get_clean();
     }
 
@@ -54,14 +48,6 @@ class Template implements \pulledbits\View\Template
     private function escape(string $unsafestring)
     {
         return htmlentities($unsafestring);
-    }
-
-    private function section(string $sectionIdentifier, string $content = null) {
-        if ($content !== null) {
-            $this->layout->section($sectionIdentifier, $this->escape($content));
-        } else {
-            $this->layout->section($sectionIdentifier);
-        }
     }
 
     /**
@@ -109,7 +95,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @param array $parameters
      */
-    public function render(array $parameters): void
+    public function render(\pulledbits\View\Layout $layout, array $parameters): void
     {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {
