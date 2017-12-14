@@ -76,12 +76,14 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     {
         $layoutPath = tempnam(sys_get_temp_dir(), 'lt_');
         file_put_contents($layoutPath, '<html><?= $this->harvest("foobar"); ?>BlaBlaLayout</html>');
-        $layout = new \pulledbits\View\File\Layout($layoutPath);
-        $object = new File\Template($this->templatePath);
-        file_put_contents($this->templatePath, '<?php $layout->section("foobar", $this->escape("Cöntent")); ?>');
 
-        $this->expectOutputString('<html>C&ouml;ntentBlaBlaLayout</html>');
-        $layout->record($object->prepare(['layout' => $layout]));
+        $object = new File\Template($this->templatePath);
+        $object->registerHelper('layout', function(string $layoutIdentifier) : Layout {
+            return new \pulledbits\View\File\Layout(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $layoutIdentifier);
+        });
+        file_put_contents($this->templatePath, '<?php $layout = $this->layout("' . basename($layoutPath) . '"); $layout->section("foobar", $this->escape("Cöntent")); $layout->compile(); ?>');
+
+        $this->assertEquals('<html>C&ouml;ntentBlaBlaLayout</html>', $object->prepare([])->capture());
     }
 
     public function testRender_When_ExistingTemplateWithVariables_Expect_ContentsOutputted()
@@ -151,7 +153,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('<html>https://example.com/path/to/fileBlaBla</html>', $object->capture());
     }
 
-    public function testRender_When_HelperRegisteredOtherReturnType_Expect_EmptyString()
+    public function testRender_When_HelperRegisteredOtherReturnType_Expect_ReturnedValue()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
         $this->template->registerHelper('url', function(string $path) : int {
@@ -160,7 +162,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         });
         $object = $this->template->prepare([]);
 
-        $this->assertEquals('<html>BlaBla</html>', $object->capture());
+        $this->assertEquals('<html>0BlaBla</html>', $object->capture());
     }
 
     public function testRender_When_HelperUsingOtherHelper_Expect_ContentsWithHelperHelper()

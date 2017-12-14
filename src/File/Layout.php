@@ -43,11 +43,6 @@ class Layout implements \pulledbits\View\Layout  {
         return $layout;
     }
 
-    public function record(\pulledbits\View\Renderable $renderable) : void {
-        print $renderable->capture();
-        $this->compile();
-    }
-
     public function compile() : void {
         if ($this->currentSectionIdentifier !== null) {
             ob_end_flush();
