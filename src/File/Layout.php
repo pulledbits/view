@@ -46,6 +46,13 @@ class Layout implements \pulledbits\View\Layout  {
     public function record() : void {
         ob_start();
     }
+    public function recordTemplate(\pulledbits\View\Template $template, array $parameters) : void {
+        ob_start();
+        $parameters['layout'] = $this;
+        $template->render($parameters);
+        $this->play();
+    }
+
     public function play() : void {
         if ($this->currentSectionIdentifier !== null) {
             $this->sections[$this->currentSectionIdentifier] = ob_get_clean();

@@ -5,32 +5,8 @@ namespace pulledbits\View;
 
 class DirectoryTest extends \PHPUnit\Framework\TestCase
 {
-    private $layout;
-
     protected function setUp() {
 
-        $this->layout = new class implements Layout {
-
-            /**
-             * @param string $sectionIdentifier
-             * @param string|null $content
-             * @return mixed
-             */
-            public function section(string $sectionIdentifier, string $content = null)
-            {
-               return;
-            }
-
-            public function record(): void
-            {
-                // TODO: Implement record() method.
-            }
-
-            public function play(): void
-            {
-                // TODO: Implement play() method.
-            }
-        };
     }
 
     public function testLoad_When_ExistingTemplateFile_Expect_ValidTemplate() {
@@ -40,9 +16,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals("TestTest", $object->load($templateIdentifier)->capture([
-            'layout' => $this->layout
-        ]));
+        $this->assertEquals("TestTest", $object->load($templateIdentifier)->capture([]));
     }
 
     public function testLoad_When_ExistingTemplateFile_Expect_SubTemplatesHelper() {
@@ -56,9 +30,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('bar', $object->load($templateIdentifier)->capture([
-            'layout' => $this->layout
-        ]));
+        $this->assertEquals('bar', $object->load($templateIdentifier)->capture([]));
     }
 
     public function testLoad_When_HelpersRegisterd_Expect_TemplateWithHelpers() {
@@ -73,9 +45,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $expectedTemplate = new File\Template($templateFilename);
         $expectedTemplate->registerHelper('test', $helper);
-        $this->assertEquals("FooBarTest", $object->load($templateIdentifier)->capture([
-            'layout' => $this->layout
-        ]));
+        $this->assertEquals("FooBarTest", $object->load($templateIdentifier)->capture([]));
     }
 
 

@@ -17,7 +17,6 @@ interface Layout
     public function section(string $sectionIdentifier, string $content = null);
 
 
+    public function recordTemplate(\pulledbits\View\Template $template, array $parameters) : void;
     public function record() : void;
-
-    public function play() : void;
 }
