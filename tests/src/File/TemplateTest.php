@@ -14,7 +14,6 @@ use pulledbits\View\Layout;
 class TemplateTest extends \PHPUnit\Framework\TestCase
 {
     private $templatePath;
-    private $templateIdentifier;
 
     /**
      * @var Template
@@ -29,8 +28,6 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
         $this->layout = new class implements Layout {
 
-            private $sections = [];
-
             public $content = '';
 
             /**
@@ -40,7 +37,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
              */
             public function section(string $sectionIdentifier, string $content = null)
             {
-
+                return;
             }
 
             public function record(): void
@@ -147,7 +144,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\\PHPUnit\\Framework\\Error\\Error');
         $this->expectExceptionMessage('Call to undefined method ' . get_class($this->object) . '::nonExistingHelper');
-        $this->object->nonExistingHelper();
+        $this->object->__call('nonExistingHelper', []);
     }
 
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()

@@ -1,9 +1,6 @@
 <?php
 namespace pulledbits\View\File;
 
-use pulledbits\View\Directory;
-
-
 /**
  * Class Template
  * @package pulledbits\View\File

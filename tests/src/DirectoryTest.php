@@ -5,6 +5,8 @@ namespace pulledbits\View;
 
 class DirectoryTest extends \PHPUnit\Framework\TestCase
 {
+    private $layout;
+
     protected function setUp() {
 
         $this->layout = new class implements Layout {
@@ -16,7 +18,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
              */
             public function section(string $sectionIdentifier, string $content = null)
             {
-                // TODO: Implement section() method.
+               return;
             }
 
             public function record(): void
