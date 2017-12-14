@@ -43,9 +43,7 @@ class Layout implements \pulledbits\View\Layout  {
         return $layout;
     }
 
-    public function record() : void {
-    }
-    public function recordTemplate(\pulledbits\View\Template $template, array $parameters) : void {
+    public function record(\pulledbits\View\Template $template, array $parameters) : void {
         $parameters['layout'] = $this;
         $template->render($parameters);
         $this->play();
@@ -59,7 +57,6 @@ class Layout implements \pulledbits\View\Layout  {
         if ($this->extends === null) {
             include $this->layoutPath;
         } else {
-            $this->extends->record();
             $layout = $this->extends;
             include $this->layoutPath;
             $this->extends->play();
