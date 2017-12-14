@@ -44,7 +44,7 @@ class Layout implements \pulledbits\View\Layout  {
     }
 
     public function record(\pulledbits\View\Renderable $renderable) : void {
-        $renderable->render($this);
+        print $renderable->capture();
         $this->compile();
     }
 

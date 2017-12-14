@@ -12,7 +12,12 @@ class TemplateInstance implements Renderable
         $this->parameters = $parameters;
     }
 
-    public function render() : void {
-        $this->template->render($this->parameters);
+    public function __call(string $identifier, array $arguments): string
+    {
+        $this->template->__call(...func_get_args());
+    }
+
+    public function capture() : string {
+        return $this->template->capture($this->parameters);
     }
 }

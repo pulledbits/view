@@ -6,5 +6,5 @@ namespace pulledbits\View;
 
 interface Renderable
 {
-    public function render(): void;
+    public function capture() : string;
 }

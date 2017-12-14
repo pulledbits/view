@@ -30,7 +30,7 @@ class Directory
 
         $directory = $this;
         $template->registerHelper('sub', function(string $templateIdentifier, array $parameters) use ($directory) {
-            $directory->load($templateIdentifier)->render($parameters);
+            print $directory->load($templateIdentifier)->prepare($parameters)->capture();
         });
 
         return $template;
