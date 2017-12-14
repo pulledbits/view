@@ -58,7 +58,7 @@ class Template implements \pulledbits\View\Template
     public function __call(string $identifier, array $arguments): string
     {
         if (array_key_exists($identifier, $this->helpers) === false) {
-            return '';
+            trigger_error('Call to undefined method ' . __CLASS__ . '::' . $identifier, E_USER_ERROR);
         }
 
         $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
@@ -96,6 +96,21 @@ class Template implements \pulledbits\View\Template
      * @param array $parameters
      */
     public function render(\pulledbits\View\Layout $layout, array $parameters): void
+    {
+        $variables = [];
+        foreach ($parameters as $parameterIdentifier => $parameter) {
+            if (is_callable($parameter)) {
+                $this->registerHelper($parameterIdentifier, $parameter);
+            } else {
+                $variables[$parameterIdentifier] = $parameter;
+            }
+        }
+        extract($variables);
+
+        include $this->templatePath;
+    }
+
+    public function renderWithoutLayout(array $parameters): void
     {
         $variables = [];
         foreach ($parameters as $parameterIdentifier => $parameter) {

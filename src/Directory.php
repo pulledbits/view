@@ -27,6 +27,12 @@ class Directory
         foreach ($this->helpers  as $helperIdentifier => $helper) {
             $template->registerHelper($helperIdentifier, clone $helper);
         }
+
+        $directory = $this;
+        $template->registerHelper('sub', function(string $templateIdentifier, array $parameters) use ($directory) {
+            $directory->load($templateIdentifier)->renderWithoutLayout($parameters);
+        });
+
         return $template;
     }
 

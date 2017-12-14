@@ -138,9 +138,11 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    public function test__call_When_NonExistingHelper_Expect_EmptyString()
+    public function test__call_When_NonExistingHelper_Expect_Error()
     {
-        $this->assertEquals('', $this->object->nonExistingHelper());
+        $this->expectException('\\PHPUnit\\Framework\\Error\\Error');
+        $this->expectExceptionMessage('Call to undefined method ' . get_class($this->object) . '::nonExistingHelper');
+        $this->object->nonExistingHelper();
     }
 
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()
