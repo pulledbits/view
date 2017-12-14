@@ -33,6 +33,20 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('bar', $object->load($templateIdentifier)->prepare([])->capture());
     }
 
+    public function testLoad_When_TemplateCreatedThroughLoad_Expect_LayoutTemplatesHelperAvailable() {
+        $layoutFilename = tempnam(sys_get_temp_dir() . DIRECTORY_SEPARATOR, 'tt_') . '.php';
+        file_put_contents($layoutFilename, '<?=$this->harvest("foo");?>');
+
+        $templateFilename = tempnam(sys_get_temp_dir() . DIRECTORY_SEPARATOR, 'tt_') . '.php';
+        file_put_contents($templateFilename, '<?php $layout = $this->layout("' . basename($layoutFilename, '.php') . '"); $layout->section("foo", "bar"); $layout->compile(); ?>');
+
+        $templateIdentifier = basename($templateFilename, '.php');
+
+        $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
+
+        $this->assertEquals('bar', $object->load($templateIdentifier)->prepare([])->capture());
+    }
+
     public function testLoad_When_HelpersRegisterd_Expect_TemplateWithHelpers() {
         $templateFilename = tempnam(sys_get_temp_dir() . DIRECTORY_SEPARATOR, 'tt_') . '.php';
         file_put_contents($templateFilename, '<?php $this->test(); ?>');

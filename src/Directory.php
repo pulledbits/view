@@ -29,8 +29,11 @@ class Directory
         }
 
         $directory = $this;
-        $template->registerHelper('sub', function(string $templateIdentifier, array $parameters) use ($directory) {
+        $template->registerHelper('sub', function(string $templateIdentifier, array $parameters) use ($directory) : void {
             print $directory->load($templateIdentifier)->prepare($parameters)->capture();
+        });
+        $template->registerHelper('layout', function(string $layoutIdentifier) use ($directory) : Layout {
+            return $directory->layout($layoutIdentifier);
         });
 
         return $template;
