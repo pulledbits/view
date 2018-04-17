@@ -2,6 +2,7 @@
 
 namespace pulledbits\View;
 
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface Template
@@ -15,6 +16,8 @@ interface Template
      * @param callable $callback
      */
     public function registerHelper(string $identifier, callable $callback) : void;
+
+    public function prepareAsResponse(ResponseInterface $response, array $parameters) : ResponseInterface;
 
     public function prepare(array $parameters) : TemplateInstance;
 }

@@ -43,7 +43,7 @@ class Template implements \pulledbits\View\Template
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function prepareAsResponse(ResponseInterface $response, array $parameters) {
+    public function prepareAsResponse(ResponseInterface $response, array $parameters) : ResponseInterface {
         return $response->withBody($this->prepare($parameters)->convertToStream());
     }
 
