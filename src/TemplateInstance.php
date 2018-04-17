@@ -4,6 +4,8 @@
 namespace pulledbits\View;
 
 
+use Psr\Http\Message\StreamInterface;
+
 class TemplateInstance implements Renderable
 {
     private $templatePath;
@@ -63,5 +65,10 @@ class TemplateInstance implements Renderable
         ob_start();
         include $this->templatePath;
         return ob_get_clean();
+    }
+
+    public function convertToStream(): StreamInterface
+    {
+        return \GuzzleHttp\Psr7\stream_for($this->capture());
     }
 }
