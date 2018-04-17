@@ -1,6 +1,7 @@
 <?php
 namespace pulledbits\View\File;
 
+use Psr\Http\Message\ResponseInterface;
 use pulledbits\View\TemplateInstance;
 
 /**
@@ -40,6 +41,10 @@ class Template implements \pulledbits\View\Template
     public function registerHelper(string $identifier, callable $callback) : void
     {
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
+    }
+
+    public function prepareAsResponse(ResponseInterface $response, array $parameters) {
+        return $response->withBody($this->prepare($parameters)->convertToStream());
     }
 
     public function prepare(array $parameters) : TemplateInstance {
