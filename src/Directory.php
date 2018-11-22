@@ -21,9 +21,9 @@ class Directory
      * @param string $templateIdentifier
      * @return Template
      */
-    public function load(string $templateIdentifier) : Template
+    public function load(string $templateIdentifier, array $variables = []) : Template
     {
-        $template = new File\Template($this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php');
+        $template = new File\Template($this->directoryTemplates . DIRECTORY_SEPARATOR . $templateIdentifier . '.php', $variables);
         foreach ($this->helpers  as $helperIdentifier => $helper) {
             $template->registerHelper($helperIdentifier, $helper);
         }
