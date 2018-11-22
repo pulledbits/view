@@ -23,7 +23,7 @@ class Template implements \pulledbits\View\Template
     /**
      * @var array
      */
-    private $instanceVariables;
+    private $templateVariables;
 
     /**
      * Template constructor.
@@ -33,7 +33,7 @@ class Template implements \pulledbits\View\Template
     {
         $this->templatePath = $templatePath;
         $this->helpers = [];
-        $this->instanceVariables = $variables;
+        $this->templateVariables = $variables;
         $this->registerHelper('escape', function(string $unsafestring) : string
         {
             return htmlentities($unsafestring);
@@ -54,7 +54,7 @@ class Template implements \pulledbits\View\Template
     }
 
     public function prepare(array $parameters = []) : TemplateInstance {
-        $instance = new TemplateInstance($this->templatePath, array_merge($this->instanceVariables, $parameters));
+        $instance = new TemplateInstance($this->templatePath, array_merge($this->templateVariables, $parameters));
         foreach ($this->helpers as $helperIdentifier => $helper) {
             $instance->registerHelper($helperIdentifier, $helper);
         }
