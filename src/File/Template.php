@@ -53,7 +53,7 @@ class Template implements \pulledbits\View\Template
         return $response->withBody($this->prepare($parameters)->convertToStream());
     }
 
-    public function prepare(array $parameters) : TemplateInstance {
+    public function prepare(array $parameters = []) : TemplateInstance {
         $instance = new TemplateInstance($this->templatePath, array_merge($this->instanceVariables, $parameters));
         foreach ($this->helpers as $helperIdentifier => $helper) {
             $instance->registerHelper($helperIdentifier, $helper);

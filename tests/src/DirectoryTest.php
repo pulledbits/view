@@ -41,7 +41,7 @@ class DirectoryTest extends \PHPUnit\Framework\TestCase
 
         $object = new Directory(sys_get_temp_dir(), sys_get_temp_dir());
 
-        $this->assertEquals('bar', $object->load($templateIdentifier, ["foo" => "bar"])->prepare([])->capture());
+        $this->assertEquals('bar', $object->load($templateIdentifier, ["foo" => "bar"])->prepare()->capture());
     }
 
     public function testLoad_When_TemplateCreatedThroughLoad_Expect_LayoutTemplatesHelperAvailable() {
