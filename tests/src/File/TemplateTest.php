@@ -28,8 +28,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
             print 'https://example.com' . $path;
             return 0;
         });
-        $response = $this->object->prepareAsResponse(new Response());
-
-        $this->assertEquals('<html>0BlaBla</html>', $response->getBody());
+        $instance = $this->object->prepare();
+        $this->assertEquals('<html>0BlaBla</html>', $instance->capture());
     }
 }
