@@ -196,21 +196,4 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('<html>https://example.com/path/to/fileBlaBla</html>', $object->capture());
     }
 
-
-    public function testConvertToStream_When_HelperUsingOtherPrivateHelper_Expect_ContentsWithHelperHelper()
-    {
-        file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path): string {
-            return 'https://' . $this->host() . $path;
-        });
-        $object = $this->template->prepare([
-            'host' => function(): string {
-                return 'example.com';
-            }
-        ]);
-
-        $stream = $object->convertToStream();
-
-        $this->assertEquals('<html>https://example.com/path/to/fileBlaBla</html>', $stream->getContents());
-    }
 }

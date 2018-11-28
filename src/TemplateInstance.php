@@ -66,9 +66,4 @@ class TemplateInstance implements Renderable
         include $this->templatePath;
         return ob_get_clean();
     }
-
-    public function convertToStream(): StreamInterface
-    {
-        return \GuzzleHttp\Psr7\stream_for($this->capture());
-    }
 }
