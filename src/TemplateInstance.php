@@ -29,7 +29,7 @@ final class TemplateInstance implements Renderable
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function __call(string $identifier, array $arguments) : string
+    public function __call(string $identifier, array $arguments)
     {
         if (array_key_exists($identifier, $this->helpers) === false) {
             trigger_error('Call to undefined method ' . __CLASS__ . '::' . $identifier, E_USER_ERROR);
