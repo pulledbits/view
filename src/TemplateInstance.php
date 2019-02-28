@@ -3,10 +3,7 @@
 
 namespace pulledbits\View;
 
-
-use Psr\Http\Message\StreamInterface;
-
-class TemplateInstance implements Renderable
+final class TemplateInstance implements Renderable
 {
     private $templatePath;
 
@@ -32,16 +29,19 @@ class TemplateInstance implements Renderable
         $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
     }
 
-    public function __call(string $identifier, array $arguments)
+    public function __call(string $identifier, array $arguments) : string
     {
         if (array_key_exists($identifier, $this->helpers) === false) {
             trigger_error('Call to undefined method ' . __CLASS__ . '::' . $identifier, E_USER_ERROR);
         }
 
-        $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
-        $returnType = $helperReflection->getReturnType();
-        if ($helperReflection->hasReturnType() === false) {
-            $returnType = 'void';
+        $returnType = 'void';
+        try {
+            $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
+            if ($helperReflection->hasReturnType()) {
+                $returnType = $helperReflection->getReturnType();
+            }
+        } catch (\ReflectionException $e) {
         }
 
         switch ($returnType) {
@@ -61,7 +61,7 @@ class TemplateInstance implements Renderable
     }
 
     public function capture() : string {
-        extract($this->variables);
+        extract($this->variables, EXTR_OVERWRITE);
         ob_start();
         include $this->templatePath;
         return ob_get_clean();
