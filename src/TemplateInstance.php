@@ -26,7 +26,12 @@ final class TemplateInstance implements Renderable
 
     public function registerHelper(string $identifier, callable $callback) : void
     {
-        $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
+        $this->helpers[$identifier] = $callback;
+    }
+
+    private function call(string $identifier, array $arguments)
+    {
+        return $this->helpers[$identifier]($this, ...$arguments);
     }
 
     public function __call(string $identifier, array $arguments)
@@ -46,15 +51,15 @@ final class TemplateInstance implements Renderable
 
         switch ($returnType) {
             case 'string':
-                return $this->helpers[$identifier](...$arguments);
+                return $this->call($identifier, $arguments);
 
             case 'void':
-                $this->helpers[$identifier](...$arguments);
+                $this->call($identifier, $arguments);
                 return '';
 
             default:
                 ob_start();
-                $return = $this->helpers[$identifier](...$arguments);
+                $return = $this->call($identifier, $arguments);
                 ob_end_clean();
                 return $return;
         }

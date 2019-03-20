@@ -4,6 +4,7 @@ namespace pulledbits\View\File;
 
 
 use GuzzleHttp\Psr7\Response;
+use pulledbits\View\TemplateInstance;
 
 class TemplateTest extends \PHPUnit\Framework\TestCase
 {
@@ -24,7 +25,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     public function testPrepareAsResponse()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->object->registerHelper('url', function(string $path) : int {
+        $this->object->registerHelper('url', function(TemplateInstance $templateInstance, string $path) : int {
             print 'https://example.com' . $path;
             return 0;
         });

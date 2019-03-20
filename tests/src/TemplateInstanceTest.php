@@ -64,13 +64,25 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         file_put_contents($this->templatePath, '<html><?php $this->bar();?></html>');
 
         $object = $this->template->prepare([
-            'foo' => function() : void { print 'Bla'; },
-            'bar' => function() : void { $this->foo(); }
+            'foo' => function(TemplateInstance $templateInstance) : void { print 'Bla'; },
+            'bar' => function(TemplateInstance $templateInstance) : void { $templateInstance->foo(); }
         ]);
 
         $this->assertEquals('<html>Bla</html>', $object->capture());
     }
 
+
+    public function testCapture_When_HelperUsingEscape_Expect_ContentsEscaped()
+    {
+        file_put_contents($this->templatePath, '<html><?php $this->bar();?></html>');
+
+        $object = $this->template->prepare([
+            'foo' => function(TemplateInstance $templateInstance) : void { print $templateInstance->escape('Blä'); },
+            'bar' => function(TemplateInstance $templateInstance) : void { $templateInstance->foo(); }
+        ]);
+
+        $this->assertEquals('<html>Bl&auml;</html>', $object->capture());
+    }
 
     public function testRender_When_TemplateUsingLayout_Expect_ContentsOutputted()
     {
@@ -78,7 +90,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
         file_put_contents($layoutPath, '<html><?= $this->harvest("foobar"); ?>BlaBlaLayout</html>');
 
         $object = new File\Template($this->templatePath);
-        $object->registerHelper('layout', function(string $layoutIdentifier) : Layout {
+        $object->registerHelper('layout', function(TemplateInstance $templateInstance, string $layoutIdentifier) : Layout {
             return new \pulledbits\View\File\Layout(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $layoutIdentifier);
         });
         file_put_contents($this->templatePath, '<?php $layout = $this->layout("' . basename($layoutPath) . '"); $layout->section("foobar", $this->escape("Cöntent")); $layout->compile(); ?>');
@@ -122,7 +134,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperRegistered_Expect_ContentsWithHelperOutput()
     {
         file_put_contents($this->templatePath, '<html><?=$this->escape($this->url(\'/path/to/file\'));?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path): string {
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path): string {
             return 'https://example.com/<>' . $path;
         });
         $object = $this->template->prepare([]);
@@ -133,7 +145,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperRegisteredWhichReturnsNULLAndOutputsDirectly_Expect_OBContentsWithHelperOutput()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path) : void {
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path) : void {
             print 'https://example.com' . $path;
         });
 
@@ -145,7 +157,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperRegisteredNoReturnType_Expect_OBContentsWithHelperOutput()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path) {
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path) {
             print 'https://example.com' . $path;
         });
         $object = $this->template->prepare([]);
@@ -156,7 +168,7 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperRegisteredOtherReturnType_Expect_ReturnedValue()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path) : int {
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path) : int {
             print 'https://example.com' . $path;
             return 0;
         });
@@ -168,8 +180,8 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperUsingOtherHelper_Expect_ContentsWithHelperHelper()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path): string {
-            return 'https://' . $this->host() . $path;
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path): string {
+            return 'https://' . $templateInstance->host() . $path;
         });
         $object = $this->template->prepare([
             'host' => function(): string {
@@ -184,8 +196,8 @@ class TemplateInstanceTest extends \PHPUnit\Framework\TestCase
     public function testRender_When_HelperUsingOtherPrivateHelper_Expect_ContentsWithHelperHelper()
     {
         file_put_contents($this->templatePath, '<html><?=$this->url(\'/path/to/file\')?>BlaBla</html>');
-        $this->template->registerHelper('url', function(string $path): string {
-            return 'https://' . $this->host() . $path;
+        $this->template->registerHelper('url', function(TemplateInstance $templateInstance, string $path): string {
+            return 'https://' . $templateInstance->host() . $path;
         });
         $object = $this->template->prepare([
             'host' => function(): string {

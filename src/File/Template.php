@@ -34,7 +34,7 @@ class Template implements \pulledbits\View\Template
         $this->path = $templatePath;
         $this->helpers = [];
         $this->variables = $variables;
-        $this->registerHelper('escape', function(string $unsafestring) : string
+        $this->registerHelper('escape', function(TemplateInstance $templateInstance, string $unsafestring) : string
         {
             return htmlentities($unsafestring);
         });
@@ -46,7 +46,7 @@ class Template implements \pulledbits\View\Template
      */
     public function registerHelper(string $identifier, callable $callback) : void
     {
-        $this->helpers[$identifier] = \Closure::bind($callback, $this, __CLASS__);
+        $this->helpers[$identifier] = $callback;
     }
 
     public function prepare(array $parameters = []) : TemplateInstance {
