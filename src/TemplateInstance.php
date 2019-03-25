@@ -65,6 +65,10 @@ final class TemplateInstance implements Renderable
         }
     }
 
+    public function serial() {
+        return md5($this->templatePath . serialize($this->variables));
+    }
+
     public function capture() : string {
         extract($this->variables, EXTR_OVERWRITE);
         ob_start();
