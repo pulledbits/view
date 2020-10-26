@@ -44,7 +44,7 @@ final class TemplateInstance implements Renderable
         try {
             $helperReflection = new \ReflectionFunction($this->helpers[$identifier]);
             if ($helperReflection->hasReturnType()) {
-                $returnType = $helperReflection->getReturnType();
+                $returnType = $helperReflection->getReturnType()->getName();
             }
         } catch (\ReflectionException $e) {
         }
