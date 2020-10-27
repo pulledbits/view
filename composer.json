@@ -1,5 +1,5 @@
 {
-	"name" : "pulledbits/view",
+	"name" : "rikmeijer/view",
 	"description" : "native PHP view engine",
 	"license" : "MIT",
 	"require" : {
